@@ -1,0 +1,7 @@
+flask==3.1.1
+python-dotenv==1.1.1
+Flask-PyMongo==3.0.1
+certifi==2025.6.15
+authlib==1.6.0
+requests==2.32.4
+gunicorn==23.0.0

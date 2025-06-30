@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusNest{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/static/img/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <a href="/" class="logo-link">
+                    <img src="/static/img/favicon.png" alt="FocusNest" class="header-logo">
+                    <span class="brand-name">Focus<span class="gradient-text">Nest</span></span>
+                </a>
+                
+                <nav class="header-nav">
+                    {% if request.path == "/" %}
+                        {% if session.user %}
+                            <a href="/dashboard" class="nav-item button-primary">Dashboard</a>
+                        {% else %}
+                            <a href="/login" class="nav-item button-primary">Login</a>
+                        {% endif %}
+                    {% else %}
+                        {% if session.user %}
+                            <a href="/logout" class="nav-item button-primary">Logout</a>
+                        {% else %}
+                            <a href="/login" class="nav-item button-primary">Login</a>
+                        {% endif %}
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

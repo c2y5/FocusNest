@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="landing-container">
+    <section class="hero">
+        <div class="hero-content">
+            <div class="logo-display">
+                <img src="/static/img/favicon.png" alt="FocusNest" class="hero-logo">
+                <h1>Focus<span class="gradient-text">Nest</span></h1>
+            </div>
+            <p class="tagline">Your AI-powered productivity management</p>
+            <div class="cta-buttons">
+                <a href="/login" class="cta-primary">
+                    <span class="btn-icon">→</span> Start Focusing
+                </a>
+                <a href="#features" class="cta-secondary">
+                    <span class="btn-icon">↓</span> Explore Features
+                </a>
+            </div>
+        </div>
+        <div class="corner-gradient top-right"></div>
+    </section>
+    <div class="corner-gradient bottom-left"></div>
+    <section id="features" class="features">
+        <h2>Why <span class="gradient-text">FocusNest?</span></h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>Smart Timer</h3>
+                <p>Pomodoro sessions with automatic productivity tracking</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>AI Assistant</h3>
+                <p>Instant study help, summaries and flashcard generation</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎵</div>
+                <h3>Focus Music</h3>
+                <p>Seamless Spotify integration for some background music</p>
+            </div>
+        </div>
+    </section>
+    <section class="demo">
+        <div class="corner-gradient bottom-right"></div>
+        <div class="demo-content">
+            <h2>Experience the <span class="gradient-text">Difference</span></h2>
+            <div class="mockup">
+                <img src="/static/img/dashboard-preview.jpg" 
+                    alt="Dashboard preview" 
+                    class="mockup-image">
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.querySelectorAll(".feature-card").forEach(card => {
+        card.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty("--mouse-x", `${x}px`);
+            card.style.setProperty("--mouse-y", `${y}px`);
+        });
+
+        card.addEventListener("mouseleave", () => {
+            card.style.removeProperty("--mouse-x");
+            card.style.removeProperty("--mouse-y");
+        });
+    });
+</script>
+
+{% endblock %}
