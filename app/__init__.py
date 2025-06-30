@@ -24,11 +24,13 @@ def create_app():
 
     from .auth.routes import auth_bp, config_oauth
     from .dashboard.routes import dashboard_bp
+    from .api.routes import api_bp
 
     config_oauth(app)
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(api_bp)
 
     @app.route("/")
     def index():

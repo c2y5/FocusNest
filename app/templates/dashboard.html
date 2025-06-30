@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <section class="hero">
     <div class="hero-content">
         <div class="logo-display">
-            <h2>Welcome back, <span class="gradient-text">{{ session.user.nickname }}</span></h2>
+            <h2>Welcome back, <span class="gradient-text">{{ session.user.nickname if "@" in session.user.name else session.user.name }}</span></h2>
         </div>
         <p class="tagline">Ready to start focusing?</p>
     </div>
