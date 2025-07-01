@@ -18,7 +18,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 autoSwitchTabs: true
             };
             this.settings = {...this.defaultSettings};
-
+            
+            this.completionSound = new Audio("/static/sounds/complete.mp3");
+            this.completionSound.preload = "auto";
+            
             this.timerDisplay = document.querySelector(".ctimer-display");
             this.minutesDisplay = document.querySelector(".ctimer-minutes");
             this.secondsDisplay = document.querySelector(".ctimer-seconds");
@@ -39,6 +42,15 @@ document.addEventListener("DOMContentLoaded", function() {
             this.setupEventListeners();
             this.resetTimer();
             this.setActiveMode("work");
+            
+            try {
+                await this.completionSound.play().then(() => {
+                    this.completionSound.pause();
+                    this.completionSound.currentTime = 0;
+                });
+            } catch (e) {
+                console.log("Audio preloading failed:", e);
+            }
         }
 
         async loadSettings() {
@@ -100,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
             });
-            
         }
 
         startTimer() {
@@ -133,15 +144,34 @@ document.addEventListener("DOMContentLoaded", function() {
             this.startBtn.textContent = "Start";
         }
 
-        timerComplete() {
+        async timerComplete() {
             this.isRunning = false;
-            this.playCompletionSound();
+            
+            await this.playCompletionSound();
             
             if (this.currentMode === "work") {
-                this.handleWorkCompletion();
+                await this.handleWorkCompletion();
             } else {
-                this.handleBreakCompletion();
+                await this.handleBreakCompletion();
             }
+        }
+
+        playCompletionSound() {
+            return new Promise((resolve) => {
+                this.completionSound.currentTime = 0;
+                
+                const onEnded = () => {
+                    this.completionSound.removeEventListener("ended", onEnded);
+                    resolve();
+                };
+                
+                this.completionSound.addEventListener("ended", onEnded);
+                
+                this.completionSound.play().catch(e => {
+                    console.log("Audio playback failed:", e);
+                    resolve();
+                });
+            });
         }
 
         handleWorkCompletion() {
@@ -187,11 +217,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         updatePomodoroCount() {
             this.pomodoroCountDisplay.textContent = `Pomodoros: ${this.pomodoroCount}`;
-        }
-
-        playCompletionSound() {
-            const audio = new Audio("/static/sounds/complete.mp3");
-            audio.play().catch(e => console.log("Audio playback failed:", e));
         }
 
         showNotification(title, body = "") {
