@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const username = document.getElementById("username");
         fetch("/api/settings").then(response => response.json()).then(data => {
-            if (data.preferedName) {
-                username.textContent = data.preferedName;
+            if (data.preferredName) {
+                username.textContent = data.preferredName;
             } else if (data.name.includes("@")) {
                 username.textContent = data.nickname
             } else {

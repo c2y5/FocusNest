@@ -88,7 +88,7 @@ def settings():
 
         if not settings:
             settings = {
-                "preferedName": "",
+                "preferredName": "",
                 "pomodoroTimer": {
                     "workDuration": 25,
                     "shortBreakDuration": 5,
