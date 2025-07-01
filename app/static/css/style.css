@@ -1,6 +1,5 @@
 :root {
   --bg-dark: #121212;
-  --card-dark: #1e1e1e;
   --card-light: #252525;
   --text-light: #f0f0f0;
   --text-muted: rgba(240, 240, 240, 0.7);
@@ -60,7 +59,7 @@ p {
 
 .app-header {
   position: relative;
-  background: var(--card-dark);
+  background: var(--card-light);
   padding: 0 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -353,7 +352,7 @@ p {
 
 .feature-card:hover {
   transform: translateY(-10px);
-  background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+  background: var(--card-light);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -478,7 +477,7 @@ p {
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+  background: var(--card-light);
   border-radius: 16px;
   padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -515,11 +514,6 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0) 100%
-  );
   z-index: 1;
 }
 
@@ -565,7 +559,7 @@ p {
 .username-text {
   font-size: 1.8rem;
   margin: 0.25rem 0 0 0;
-  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  background: var(--primary-light);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -798,7 +792,7 @@ p {
 }
 
 .streak-card {
-  background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+  background: var(--card-light);
   border-radius: 16px;
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -838,16 +832,6 @@ p {
   flex-direction: column;
   gap: 0.5rem;
   text-align: center;
-}
-
-.streak-count {
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0.5rem 0;
-  background: linear-gradient(45deg, var(--primary-light), var(--teal));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .streak-quote {
@@ -895,7 +879,7 @@ p {
   font-size: 2rem;
   font-weight: 600;
   margin: 0.5rem 0;
-  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  background: var(--accent);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -903,7 +887,7 @@ p {
 }
 
 .tasks-card {
-  background: var(--card-dark);
+  background: var(--card-light);
   border-radius: 16px;
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1048,7 +1032,7 @@ p {
 }
 
 .timer-card {
-  background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+  background: var(--card-light);
   border-radius: 16px;
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1111,7 +1095,7 @@ p {
   font-weight: 600;
   font-family: "Inter", monospace;
   margin: 1rem 0;
-  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  background: var(--primary);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1217,6 +1201,6 @@ p {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  background: var(--teal);
   border-radius: 2px;
 }
