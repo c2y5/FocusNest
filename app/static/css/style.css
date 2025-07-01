@@ -469,3 +469,218 @@ p {
     height: 300px;
   }
 }
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+    max-width: 600px;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        200px circle at var(--mouse-x) var(--mouse-y),
+        rgba(94, 124, 226, 0.15),
+        transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 0;
+}
+
+.welcome-card:hover::before {
+    opacity: 1;
+}
+
+.welcome-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.03) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    z-index: 1;
+}
+
+.welcome-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.greeting-text {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.username-text {
+    font-size: 1.8rem;
+    margin: 0.25rem 0 0 0;
+    background: linear-gradient(45deg, var(--primary-light), var(--teal));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.welcome-message {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    
+    .profile-pic {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .greeting-text {
+        font-size: 1.3rem;
+    }
+    
+    .username-text {
+        font-size: 1.5rem;
+    }
+}
+
+.timer-display {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.timer-display span {
+    min-width: 2ch;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .timer-display {
+        font-size: 1rem;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .header-content {
+        justify-content: space-between;
+    }
+    
+    .logo-link {
+        z-index: 2;
+    }
+}
+
+.card-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.emotion-card {
+    background: #242424;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.emotion-title {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.emotion-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.emotion-option {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: transform 0.2s ease;
+    border-radius: 50%;
+    color: var(--text-light);
+}
+
+.emotion-option.selected {
+    background: rgba(46, 94, 170, 0.2);
+    transform: scale(1.2);
+}
+
+.emotion-instruction {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin: 0;
+    margin-top: 0.5rem;
+}

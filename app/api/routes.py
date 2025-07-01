@@ -4,6 +4,8 @@
 from flask import Blueprint, session, request, jsonify
 from app import mongo
 from bson.objectid import ObjectId
+import datetime
+import math
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -108,4 +110,83 @@ def me():
     if not session.get("user"):
         return jsonify({"error": "Unauthorized"}), 401
 
-    return jsonify(session["user"])
+    data = {
+        "name": session["user"]["name"],
+        "nickname": session["user"]["nickname"],
+        "picture": session["user"]["picture"]
+    }
+    return data
+
+@api_bp.route("emotion", methods=["POST", "GET"])
+def log_emotion():
+    if not session.get("user"):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    if request.method == "POST":
+        data = request.json
+        emotion = data.get("emotion")
+
+        if not emotion:
+            return jsonify({"error": "Emotion is required"}), 400
+        
+        user_id = session["user"]["id"]
+        last_log = mongo.db.emotions.find_one(
+            {"user_id": user_id},
+            sort=[("timestamp", -1)]
+        )
+        
+        if last_log:
+            last_log_time = last_log["timestamp"]
+            current_time = datetime.datetime.now(datetime.timezone.utc)
+            
+            if last_log_time.tzinfo is None:
+                last_log_time = last_log_time.replace(tzinfo=datetime.timezone.utc)
+                
+            time_since_last = (current_time - last_log_time).total_seconds()
+
+            if time_since_last < 1800:
+                remaining_time = 1800 - time_since_last
+                minutes = int(remaining_time // 60)
+                seconds = int(remaining_time % 60)
+                return jsonify({
+                    "error": f"You can only log emotions once every 30 minutes. Please wait {minutes}m {seconds}s."
+                }), 429
+
+        log_entry = {
+            "user_id": user_id,
+            "emotion": emotion,
+            "timestamp": datetime.datetime.now(datetime.timezone.utc)
+        }
+
+        try:
+            mongo.db.emotions.insert_one(log_entry)
+        except Exception as e:
+            return jsonify({"error": f"Failed to log emotion: {e}"}), 500
+
+        return jsonify({"status": "success"}), 200
+    elif request.method == "GET":
+        user_id = session["user"]["id"]
+        last_log = mongo.db.emotions.find_one(
+            {"user_id": user_id},
+            sort=[("timestamp", -1)]
+        )
+
+        if not last_log:
+            return jsonify({"can_log": True}), 200
+        
+        last_log_time = last_log["timestamp"]
+        current_time = datetime.datetime.now(datetime.timezone.utc)
+            
+        if last_log_time.tzinfo is None:
+            last_log_time = last_log_time.replace(tzinfo=datetime.timezone.utc)
+            
+        time_since_last = (current_time - last_log_time).total_seconds()
+        
+        if time_since_last < 1800:
+            remaining_time = 1800 - time_since_last
+            return jsonify({
+                "can_log": False,
+                "remaining_time": math.ceil(remaining_time)
+            }), 200
+        
+    return jsonify({"error": "Method not allowed"}), 405

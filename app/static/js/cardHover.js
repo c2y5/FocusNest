@@ -1,4 +1,4 @@
-document.querySelectorAll(".feature-card").forEach(card => {
+document.querySelectorAll(".card-mouse-highlight").forEach(card => {
     card.addEventListener("mousemove", (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;

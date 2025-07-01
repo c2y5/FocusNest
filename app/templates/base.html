@@ -16,6 +16,12 @@
                     <img src="/static/img/favicon.png" alt="FocusNest" class="header-logo">
                     <span class="brand-name">Focus<span class="gradient-text">Nest</span></span>
                 </a>
+
+                {% if request.path != "/" %}
+                    <div class="timer-display">
+                        <span id="timer-hours">00</span>:<span id="timer-minutes">00</span>:<span id="timer-seconds">00</span>
+                    </div>
+                {% endif %}
                 
                 <nav class="header-nav">
                     {% if request.path == "/" %}
@@ -35,6 +41,9 @@
             </div>
         </header>
 
+        {% if request.path != "/" %}
+            <script src="/static/js/timerBase.js"></script>
+        {% endif %}
         <main class="content">
             {% block content %}{% endblock %}
         </main>

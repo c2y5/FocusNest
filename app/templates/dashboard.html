@@ -1,13 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section class="hero">
-    <div class="hero-content">
-        <div class="logo-display">
-            <h2>Welcome back, <span class="gradient-text">{{ session.user.nickname if "@" in session.user.name else session.user.name }}</span></h2>
+<div class="dashboard-container">
+     <div class="dashboard-header">
+        <div class="card-row">
+        <div class="welcome-card card-mouse-highlight">
+            <div class="user-profile">
+                <img id="profile-picture" src="/static/img/default-profile.png" alt="Profile Picture" class="profile-pic">
+                <div class="user-info">
+                    <h2 id="greeting" class="greeting-text"></h2>
+                    <h3 id="username" class="username-text"></h3>
+                </div>
+            </div>
+            <p class="welcome-message">Ready to start focusing today?</p>
         </div>
-        <p class="tagline">Ready to start focusing?</p>
+            <div class="emotion-card">
+            <h3 class="emotion-title">How are you <span class="gradient-text"> feeling</span> currently?</h3>
+            <div class="emotion-options">
+                <button class="emotion-option" data-emotion="worst">😡</button>
+                <button class="emotion-option" data-emotion="sad">😞</button>
+                <button class="emotion-option" data-emotion="neutral">😐</button>
+                <button class="emotion-option" data-emotion="good">🙂</button>
+                <button class="emotion-option" data-emotion="really-good">😆</button>
+            </div>
+            <p class="emotion-instruction">Click to log your mood</p>
+        </div>
     </div>
-</section>
+</div>
+
+<script src="/static/js/dashGreeting.js"></script>
+<script src="/static/js/cardHover.js"></script>
+<script src="/static/js/emotionLogger.js"></script>
 
 {% endblock %}
