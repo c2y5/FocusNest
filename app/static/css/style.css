@@ -796,3 +796,108 @@ p {
   margin: 0;
   margin-top: 0.5rem;
 }
+
+.streak-card {
+    background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+    max-width: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.streak-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.streak-emoji {
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, #ff9500, #ff2d55);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.streak-title {
+    font-size: 1.3rem;
+    color: var(--text-light);
+    margin: 0;
+    text-align: center;
+}
+
+.streak-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.streak-count {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    background: linear-gradient(45deg, var(--primary-light), var(--teal));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.streak-quote {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .streak-card {
+    max-width: 100%;
+    padding: 1.25rem;
+  }
+
+  .streak-emoji {
+    font-size: 1.5rem;
+  }
+
+  .streak-title {
+    font-size: 1.1rem;
+  }
+
+  .streak-count {
+    font-size: 1.8rem;
+  }
+
+  .streak-quote {
+    font-size: 0.85rem;
+  }
+}
+
+.streak-emoji {
+  font-size: 1.8rem;
+  background: linear-gradient(45deg, #ff9500, #ff2d55);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: all 0.3s ease;
+  filter: grayscale(1) opacity(0.7);
+}
+
+.streak-count {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-align: center;
+}

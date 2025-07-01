@@ -6,6 +6,7 @@ from app import mongo
 from bson.objectid import ObjectId
 import datetime
 import math
+import requests
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -189,4 +190,92 @@ def log_emotion():
                 "remaining_time": math.ceil(remaining_time)
             }), 200
         
+        return jsonify({"can_log": True}), 200
+    
     return jsonify({"error": "Method not allowed"}), 405
+
+@api_bp.route("streak", methods=["GET", "POST"])
+def streak():
+    if not session.get("user"):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    if request.method == "GET":
+        user_id = session["user"]["id"]
+        streak_data = mongo.db.streaks.find_one({"user_id": user_id})
+
+        if not streak_data:
+            return jsonify({"streak": 0, "last_logged": None, "can_log": True}), 200
+        
+        last_logged = streak_data["last_logged"]
+
+        if last_logged.tzinfo is None:
+            last_logged = last_logged.replace(tzinfo=datetime.timezone.utc)
+
+        current_time = datetime.datetime.now(datetime.timezone.utc)
+
+        if (current_time - last_logged).days == 1:
+            streak_data["can_log"] = True
+        elif (current_time - last_logged).days >= 2:
+            streak_data["can_log"] = True
+            streak_data["streak"] = 0
+            mongo.db.streaks.update_one(
+                {"user_id": user_id},
+                {"$set": streak_data},
+                upsert=True
+            )
+        else:
+            streak_data["can_log"] = False
+            streak_data["remaining_time"] = math.ceil((last_logged + datetime.timedelta(days=1) - current_time).total_seconds())
+
+        return jsonify(streak_data), 200
+    elif request.method == "POST":
+        user_id = session["user"]["id"]
+        
+        streak_data = mongo.db.streaks.find_one({"user_id": user_id})
+
+        if not streak_data:
+            streak_data = {
+                "user_id": user_id,
+                "streak": 1,
+                "last_logged": datetime.datetime.now(datetime.timezone.utc)
+            }
+        else:
+            last_logged = streak_data["last_logged"]
+
+            if last_logged.tzinfo is None:
+                last_logged = last_logged.replace(tzinfo=datetime.timezone.utc)
+
+            current_time = datetime.datetime.now(datetime.timezone.utc)
+
+            if (current_time - last_logged).days == 1:
+                streak_data["streak"] += 1
+            elif (current_time - last_logged).days >= 2:
+                streak_data["streak"] = 1
+            else:
+                return jsonify({"error": "Streak can only be updated once per day"}), 400
+            
+            streak_data["last_logged"] = current_time
+
+        try:
+            mongo.db.streaks.update_one(
+                {"user_id": user_id},
+                {"$set": streak_data},
+                upsert=True
+            )
+        except Exception as e:
+            return jsonify({"error": f"Failed to update streak: {e}"}), 500
+            
+        return jsonify({"status": "success", "streak": streak_data["streak"]}), 200
+    
+@api_bp.route("quote", methods=["GET"])
+def get_quote():
+    if not session.get("user"):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    try:
+        r = requests.get(url="https://api.realinspire.live/v1/quotes/random", timeout=2).json()
+        return jsonify({
+            "quote": r[0]["content"] if r[0]["content"].startswith('"') else f'"{r[0]["content"]}"',
+        }), 200
+    except:
+        return jsonify({"quote": '"The secret of getting ahead is getting started."'}), 200

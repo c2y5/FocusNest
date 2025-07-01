@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="dashboard-container">
-     <div class="dashboard-header">
+    <div class="dashboard-header">
         <div class="card-row">
         <div class="welcome-card card-mouse-highlight">
             <div class="user-profile">
@@ -14,16 +14,28 @@
             </div>
             <p class="welcome-message">Ready to start focusing today?</p>
         </div>
-            <div class="emotion-card">
-            <h3 class="emotion-title">How are you <span class="gradient-text"> feeling</span> currently?</h3>
+
+        <div class="emotion-card">
+            <h3 class="emotion-title">Current Mood</h3>
             <div class="emotion-options">
-                <button class="emotion-option" data-emotion="worst">😡</button>
+                <button class="emotion-option" data-emotion="worst">😭</button>
                 <button class="emotion-option" data-emotion="sad">😞</button>
                 <button class="emotion-option" data-emotion="neutral">😐</button>
                 <button class="emotion-option" data-emotion="good">🙂</button>
-                <button class="emotion-option" data-emotion="really-good">😆</button>
+                <button class="emotion-option" data-emotion="really-good">😁</button>
             </div>
-            <p class="emotion-instruction">Click to log your mood</p>
+            <p class="emotion-instruction">Select your current mood</p>
+        </div>
+
+        <div class="streak-card">
+            <div class="streak-header">
+                <span class="streak-emoji">🔥</span>
+                <h3 class="streak-title">Current Streak</h3>
+            </div>
+            <div class="streak-content">
+                <p class="streak-count">0 day</p>
+                <p class="streak-quote">"The secret of getting ahead is getting started."</p>
+            </div>
         </div>
     </div>
 </div>
@@ -31,5 +43,7 @@
 <script src="/static/js/dashGreeting.js"></script>
 <script src="/static/js/cardHover.js"></script>
 <script src="/static/js/emotionLogger.js"></script>
+<script src="/static/js/quote.js"></script>
+<script src="/static/js/streakHandler.js"></script>
 
 {% endblock %}
