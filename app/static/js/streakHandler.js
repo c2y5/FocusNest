@@ -45,13 +45,16 @@ class StreakHandler {
 
   updateFireIcon() {
     const fireIcon = document.querySelector(".streak-emoji");
+    const streakCountElement = document.querySelector(".streak-count");
     if (!fireIcon) return;
 
     if (this.currentStreak > 0 && !this.canLog) {
+      streakCountElement.style.color = "var(--green-accent)";
       fireIcon.style.filter = "none";
       fireIcon.style.transform = "scale(1.1)";
       fireIcon.style.animation = "pulse 1.5s infinite alternate";
     } else {
+      streakCountElement.style.color = "var(--accent)";
       fireIcon.style.filter = "grayscale(1) opacity(0.7)";
       fireIcon.style.transform = "scale(1)";
       fireIcon.style.animation = "none";
