@@ -420,18 +420,25 @@ p {
   backdrop-filter: blur(10px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mockup-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   transition: transform 0.3s ease;
+  max-width: 100%;
+  max-height: 100%;
+  scale: 1.02;
 }
 
+
 .mockup:hover .mockup-image {
-  transform: scale(1.02);
+  transform: scale(1.025);
 }
 
 @media (max-width: 768px) {
@@ -486,12 +493,32 @@ p {
   }
 }
 
+
+@media (max-width: 768px) {
+  .mockup {
+    height: 400px;
+  }
+}
+
 @media (max-width: 480px) {
+  .mockup {
+    height: 300px;
+    margin-top: 2rem;
+    border-radius: 12px;
+  }
+  
   * {
     overflow-x: hidden;
   }
+  
+  .mockup-image {
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 320px) {
   .mockup {
-    height: 300px;
+    height: 250px;
   }
 }
 
