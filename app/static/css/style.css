@@ -1313,3 +1313,91 @@ p {
   background: var(--teal);
   border-radius: 2px;
 }
+
+.error-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.error-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(30, 30, 30, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: var(--border-light);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.error-code {
+  font-size: clamp(5rem, 20vw, 8rem);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.error-title {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  margin-bottom: 1rem;
+  color: var(--text-light);
+}
+
+.error-message {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-graphics .error-gradient {
+  position: absolute;
+  width: min(60vw, 600px);
+  height: min(60vw, 600px);
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  z-index: 1;
+}
+
+.error-graphics .top-right {
+  top: -30%;
+  right: -30%;
+  background: radial-gradient(circle, var(--primary-light), transparent 70%);
+}
+
+.error-graphics .bottom-left {
+  bottom: -30%;
+  left: -30%;
+  background: radial-gradient(circle, var(--teal), transparent 70%);
+}
+
+@media (max-width: 768px) {
+  .error-actions {
+    flex-direction: column;
+  }
+  
+  .error-content {
+    padding: 1.5rem;
+  }
+  
+  .error-graphics .error-gradient {
+    width: 80vw;
+    height: 80vw;
+  }
+}

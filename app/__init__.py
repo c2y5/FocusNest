@@ -25,19 +25,27 @@ def create_app():
     from .auth.routes import auth_bp, config_oauth
     from .dashboard.routes import dashboard_bp
     from .api.routes import api_bp
+    from .music.routes import mus_bp
+    from .flashcards.routes import flashcard_bp
+    from .settings.routes import set_bp
+    from .timer.routes import timer_bp
 
     config_oauth(app)
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(api_bp)
+    app.register_blueprint(mus_bp)
+    app.register_blueprint(flashcard_bp)
+    app.register_blueprint(set_bp)
+    app.register_blueprint(timer_bp)
 
     @app.route("/")
     def index():
         return render_template("index.html")
     
-    @app.route("/debug-routes")
-    def debug_routes():
-        return str([str(p) for p in app.url_map.iter_rules()])
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template("404.html"), 404
 
     return app
