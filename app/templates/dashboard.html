@@ -2,8 +2,7 @@
 {% block content %}
 
 <div class="dashboard-container">
-    <div class="dashboard-header">
-        <div class="card-row">
+    <div class="card-row">
         <div class="welcome-card card-mouse-highlight">
             <div class="user-profile">
                 <img id="profile-picture" src="/static/img/default-profile.png" alt="Profile Picture" class="profile-pic">
@@ -38,6 +37,47 @@
             </div>
         </div>
     </div>
+
+    <div class="card-row">
+        <div class="tasks-card">
+            <div class="tasks-header">
+                <h3>Tasks</h3>
+                <button class="add-task-btn">+ Add Task</button>
+            </div>
+            <div class="tasks-list">
+            </div>
+            <div class="task-input-container hidden">
+                <input type="text" class="task-input" placeholder="Enter task...">
+                <div class="task-input-actions">
+                <button class="save-task-btn">Save</button>
+                <button class="cancel-task-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timer-container">
+            <div class="timer-card">
+                <div class="ctimer-header">
+                    <h3>Pomodoro Timer</h3>
+                    <div class="ctimer-options">
+                        <button class="ctimer-option active" data-mode="work" data-time="25">Work</button>
+                        <button class="ctimer-option" data-mode="shortBreak" data-time="5">Short Break</button>
+                        <button class="ctimer-option" data-mode="longBreak" data-time="15">Long Break</button>
+                    </div>
+                </div>
+                <div class="ctimer-display">
+                    <span class="ctimer-minutes">25</span>:<span class="ctimer-seconds">00</span>
+                </div>
+                <div class="ctimer-controls">
+                    <button class="ctimer-btn start-btn">Start</button>
+                    <button class="ctimer-btn reset-btn">Reset</button>
+                </div>
+                <div class="ctimer-stats">
+                    <span class="pomodoro-count">Pomodoros: 0</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="/static/js/dashGreeting.js"></script>
@@ -45,5 +85,7 @@
 <script src="/static/js/emotionLogger.js"></script>
 <script src="/static/js/quote.js"></script>
 <script src="/static/js/streakHandler.js"></script>
+<script src="/static/js/tasksHandler.js"></script>
+<script src="/static/js/pomodoroTimer.js"></script>
 
 {% endblock %}

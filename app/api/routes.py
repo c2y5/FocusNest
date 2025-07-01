@@ -87,7 +87,26 @@ def settings():
         settings = mongo.db.settings.find_one({"user_id": session["user"]["id"]})
 
         if not settings:
-            return jsonify({"error": "Settings not found"}), 404
+            settings = {
+                "preferedName": "",
+                "pomodoroTimer": {
+                    "workDuration": 25,
+                    "shortBreakDuration": 5,
+                    "longBreakDuration": 15,
+                    "longBreakInterval": 4,
+                    "autoStartShortBreak": True,
+                    "autoStartLongBreak": True,
+                    "autoStartWork": True
+                }
+            }
+
+            mongo.db.settings.update_one(
+                {"user_id": session["user"]["id"]},
+                {"$set": settings},
+                upsert=True
+            )
+
+            return settings, 200
         
         settings["_id"] = str(settings["_id"])
 

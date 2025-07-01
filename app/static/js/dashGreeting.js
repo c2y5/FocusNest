@@ -9,11 +9,22 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("profile-picture").hidden = false;
 
         const username = document.getElementById("username");
-        if (data.name.includes("@")) {
-            username.textContent = data.nickname
-        } else {
-            username.textContent = data.name;
-        }
+        fetch("/api/settings").then(response => response.json()).then(data => {
+            if (data.preferedName) {
+                username.textContent = data.preferedName;
+            } else if (data.name.includes("@")) {
+                username.textContent = data.nickname
+            } else {
+                username.textContent = data.name;
+            }
+        }).catch(error => {
+            console.error("Error fetching settings:", error);
+            if (data.name.includes("@")) {
+                username.textContent = data.nickname
+            } else {
+                username.textContent = data.name;
+            }
+        });
 
         const greeting = document.getElementById("greeting");
         const hour = new Date().getHours();

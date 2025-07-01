@@ -798,64 +798,64 @@ p {
 }
 
 .streak-card {
-    background: linear-gradient(135deg, var(--card-dark), var(--card-light));
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    transition: all 0.4s ease;
-    max-width: 300px;
-    position: relative;
-    overflow: hidden;
+  background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+  max-width: 300px;
+  position: relative;
+  overflow: hidden;
 }
 
 .streak-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .streak-emoji {
-    font-size: 1.8rem;
-    background: linear-gradient(45deg, #ff9500, #ff2d55);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  font-size: 1.8rem;
+  background: linear-gradient(45deg, #ff9500, #ff2d55);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .streak-title {
-    font-size: 1.3rem;
-    color: var(--text-light);
-    margin: 0;
-    text-align: center;
+  font-size: 1.3rem;
+  color: var(--text-light);
+  margin: 0;
+  text-align: center;
 }
 
 .streak-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
 }
 
 .streak-count {
-    font-size: 2rem;
-    font-weight: 600;
-    margin: 0.5rem 0;
-    background: linear-gradient(45deg, var(--primary-light), var(--teal));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .streak-quote {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin: 0;
-    font-style: italic;
-    line-height: 1.4;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-style: italic;
+  line-height: 1.4;
 }
 
 @media (max-width: 768px) {
@@ -900,4 +900,323 @@ p {
   background-clip: text;
   color: transparent;
   text-align: center;
+}
+
+.tasks-card {
+  background: var(--card-dark);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tasks-header h3 {
+  font-size: 1.3rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.add-task-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-task-btn:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.task-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.task-checkbox {
+  margin-right: 0.75rem;
+  accent-color: var(--primary);
+}
+
+.task-text {
+  flex: 1;
+  color: var(--text-light);
+}
+
+.task-text.completed {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.task-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.task-btn:hover {
+  color: var(--text-light);
+}
+
+.task-input-container {
+  margin-top: 1rem;
+}
+
+.task-input {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.task-input-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.save-task-btn,
+.cancel-task-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-task-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.cancel-task-btn {
+  background: none;
+  color: var(--text-light);
+  border: 1px solid var(--text-muted);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .tasks-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .add-task-btn {
+    width: 100%;
+  }
+}
+
+.timer-card {
+  background: linear-gradient(135deg, var(--card-dark), var(--card-light));
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.timer-container {
+  flex: 2;
+  min-width: 400px;
+}
+
+.ctimer-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.ctimer-header h3 {
+  font-size: 1.3rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.ctimer-options {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.ctimer-option {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.ctimer-option.active {
+  background: rgba(46, 94, 170, 0.2);
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.ctimer-display {
+  font-size: 3.5rem;
+  font-weight: 600;
+  font-family: "Inter", monospace;
+  margin: 1rem 0;
+  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-align: center;
+}
+
+.ctimer-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.ctimer-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.start-btn {
+  background: var(--primary);
+  color: white;
+}
+
+.start-btn:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.reset-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reset-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ctimer-stats {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .timer-card {
+    max-width: 100%;
+    padding: 1.25rem;
+  }
+
+  .ctimer-display {
+    font-size: 3rem;
+  }
+
+  .ctimer-btn {
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ctimer-display {
+    font-size: 2.5rem;
+  }
+
+  .ctimer-option {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+.pulse-animation {
+  animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.ctimer-option.active {
+  background: rgba(46, 94, 170, 0.3);
+  color: var(--text-light);
+  font-weight: 500;
+  position: relative;
+}
+
+.ctimer-option.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(45deg, var(--primary-light), var(--teal));
+  border-radius: 2px;
 }
