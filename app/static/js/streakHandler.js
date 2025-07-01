@@ -58,8 +58,8 @@ class StreakHandler {
     }
   }
 
-  async updateStreak(condition = false) {
-    if (!condition || !this.canLog) return false;
+  async updateStreak() {
+    if (!this.canLog) return false;
 
     try {
       const response = await fetch("/api/streak", {

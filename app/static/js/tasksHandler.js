@@ -1,6 +1,7 @@
 class TasksHandler {
   constructor() {
     this.tasks = [];
+    this.triggeredStreak = false;
     this.currentEditId = null;
     this.initElements();
     this.initEventListeners();
@@ -105,6 +106,10 @@ class TasksHandler {
   }
 
   async toggleTaskComplete(id, completed) {
+    if (!completed && !this.triggeredStreak) {
+      streakHandler.updateStreak();
+    }
+    
     try {
       const response = await fetch("/api/tasks", {
         method: "PATCH",

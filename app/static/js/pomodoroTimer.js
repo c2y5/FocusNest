@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     class PomodoroTimer {
         constructor() {
+            this.triggeredStreak = false;
             this.timerInterval = null;
             this.timeLeft = 0;
             this.isRunning = false;
@@ -67,6 +68,10 @@ document.addEventListener("DOMContentLoaded", function() {
             });
 
             this.startBtn.addEventListener("click", () => {
+                if (!this.triggeredStreak) {
+                    streakHandler.updateStreak();
+                }
+
                 if (this.isRunning) {
                     this.pauseTimer();
                 } else {
