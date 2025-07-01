@@ -6,7 +6,11 @@
     <title>FocusNest{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="icon" href="/static/img/favicon.png">
+    {% if request.path != "/" %}
+        <link rel="stylesheet" href="/static/css/hamburgerMenu.css">
+    {% endif %}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
@@ -29,25 +33,57 @@
                     </div>
                 {% endif %}
                 
-                <nav class="header-nav">
-                    {% if request.path == "/" %}
+                {% if request.path == "/" %}
+                    <nav class="header-nav">
                         {% if session.user %}
                             <a href="/dashboard" class="nav-item button-primary">Dashboard</a>
                         {% else %}
                             <a href="/login" class="nav-item button-primary">Login</a>
                         {% endif %}
-                    {% else %}
-                        {% if session.user %}
-                            <a href="/logout" class="nav-item button-primary">Logout</a>
-                        {% else %}
-                            <a href="/login" class="nav-item button-primary">Login</a>
-                        {% endif %}
-                    {% endif %}
-                </nav>
+                    </nav>
+                {% endif %}
+
+                {% if request.path != "/" %}
+                    <div class="hamburger-menu">
+                        <div class="hamburger-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </header>
 
         {% if request.path != "/" %}
+            <div class="overlay"></div>
+            <nav class="mobile-nav">
+                <a href="/dashboard" class="mobile-nav-item active">
+                    <i class="fas fa-home nav-icon"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/timer" class="mobile-nav-item">
+                    <i class="fas fa-stopwatch-20 nav-icon"></i>
+                    <span>Pomodoro Timer</span>
+                </a>
+                <a href="/music" class="mobile-nav-item">
+                    <i class="fas fa-music nav-icon"></i>
+                    <span>Music</span>
+                </a>
+                <a href="/settings" class="mobile-nav-item">
+                    <i class="fas fa-cog nav-icon"></i>
+                    <span>Settings</span>
+                </a>
+
+                <div class="mobile-nav-footer">
+                    <a href="/logout" class="mobile-nav-item button-primary" style="margin-top: 1rem; justify-content: center;">
+                        <i class="fas fa-sign-out-alt nav-icon"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </nav>
+
             <script src="/static/js/timerBase.js"></script>
             <script src="/static/js/liveCounter.js"></script>
         {% endif %}
@@ -55,5 +91,6 @@
             {% block content %}{% endblock %}
         </main>
     </div>
+    <script src="/static/js/hamburgerMenu.js"></script>
 </body>
 </html>
