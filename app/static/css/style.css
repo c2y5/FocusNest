@@ -406,6 +406,20 @@ p {
   color: transparent;
 }
 
+.feature-icon i {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(45deg, var(--primary-light), var(--teal));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon i {
+    transform: scale(1.1);
+}
+
 .feature-card h3 {
   margin-bottom: 1rem;
   font-size: 1.5rem;
