@@ -170,7 +170,7 @@ p {
 
 .hero {
   position: relative;
-  min-height: 90vh;
+  height: 700px;
   padding: 4rem 2rem;
   display: flex;
   align-items: center;
@@ -182,6 +182,9 @@ p {
   z-index: 2;
   max-width: 800px;
   width: 100%;
+  padding: 0;
+  margin: 0 auto;
+  margin-top: -8rem;
 }
 
 .logo-display {
@@ -221,20 +224,20 @@ p {
 }
 
 .corner-gradient.top-right {
-  top: -30%;
-  right: -30%;
+  top: -150px;
+  right: -150px;
   background: radial-gradient(circle, var(--primary-light), transparent 70%);
 }
 
 .corner-gradient.bottom-left {
-  bottom: -30%;
-  left: -30%;
+  bottom: -150px;
+  left: -150px;
   background: radial-gradient(circle, var(--teal), transparent 70%);
 }
 
 .corner-gradient.bottom-right {
-  bottom: -30%;
-  right: -30%;
+  bottom: -150px;
+  right: -150px;
   background: radial-gradient(circle, var(--primary), transparent 70%);
 }
 
@@ -436,7 +439,6 @@ p {
   scale: 1.02;
 }
 
-
 .mockup:hover .mockup-image {
   transform: scale(1.025);
 }
@@ -465,7 +467,7 @@ p {
   }
 
   .hero {
-    min-height: 80vh;
+    height: 600px;
     text-align: center;
   }
 
@@ -479,8 +481,23 @@ p {
   }
 
   .corner-gradient {
-    width: 80vw;
-    height: 80vw;
+    width: 400px;
+    height: 400px;
+  }
+
+  .corner-gradient.top-right {
+    top: -100px;
+    right: -100px;
+  }
+
+  .corner-gradient.bottom-left {
+    bottom: -100px;
+    left: -100px;
+  }
+
+  .corner-gradient.bottom-right {
+    bottom: -100px;
+    right: -100px;
   }
 
   .feature-grid {
@@ -492,7 +509,6 @@ p {
     gap: 1rem;
   }
 }
-
 
 @media (max-width: 768px) {
   .mockup {
@@ -506,13 +522,17 @@ p {
     margin-top: 2rem;
     border-radius: 12px;
   }
-  
+
   * {
     overflow-x: hidden;
   }
-  
+
   .mockup-image {
     object-fit: contain;
+  }
+
+  .hero {
+    height: 500px;
   }
 }
 
@@ -1391,13 +1411,374 @@ p {
   .error-actions {
     flex-direction: column;
   }
-  
+
   .error-content {
     padding: 1.5rem;
   }
-  
+
   .error-graphics .error-gradient {
     width: 80vw;
     height: 80vw;
+  }
+}
+
+.timer-fullpage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  padding: 2rem;
+}
+
+.timer-fullpage .timer-container {
+  width: 100%;
+  max-width: 600px;
+}
+
+.timer-fullpage .timer-card {
+  background: var(--card-light);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-fullpage .ctimer-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.timer-fullpage .ctimer-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.timer-fullpage .ctimer-display {
+  font-size: 5rem;
+  font-weight: 600;
+  font-family: "Inter", monospace;
+  margin: 2rem 0;
+  background: var(--primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .timer-fullpage .ctimer-display {
+    font-size: 4rem;
+  }
+
+  .timer-fullpage .ctimer-header h1 {
+    font-size: 2rem;
+  }
+
+  .timer-fullpage .ctimer-btn {
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-fullpage .ctimer-display {
+    font-size: 3.5rem;
+  }
+
+  .timer-fullpage .ctimer-options {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timer-fullpage .ctimer-option {
+    width: 100%;
+  }
+}
+
+.settings-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-btn:hover {
+  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(30deg);
+}
+
+.settings-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.settings-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.settings-modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--card-light);
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text-light);
+}
+
+.setting-group {
+  margin-bottom: 1.5rem;
+}
+
+.setting-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-light);
+}
+
+.setting-group input {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-light);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.modal-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.save-settings {
+  background: var(--primary);
+  color: white;
+}
+
+.save-settings:hover {
+  background: var(--primary-light);
+}
+
+.cancel-settings {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cancel-settings:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.settings-modal .modal-content {
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-scrollable {
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin: 0 -0.5rem;
+  flex-grow: 1;
+}
+
+.settings-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.settings-scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.settings-scrollable::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
+}
+
+.setting-group {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.setting-group:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.setting-group label {
+  flex: 1;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-right: 1rem;
+}
+
+.setting-group input[type="number"] {
+  width: 60px;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.setting-group input[type="number"]::-webkit-outer-spin-button,
+.setting-group input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.setting-unit {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  width: 40px;
+  margin-left: 0.5rem;
+}
+
+.checkbox-setting {
+  padding-left: 0.5rem;
+}
+
+.checkbox-setting input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  margin-right: 0.75rem;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkbox-setting input[type="checkbox"]:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.checkbox-setting input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.checkbox-setting label {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-btn {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.save-settings {
+  background: var(--primary);
+}
+
+.cancel-settings {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.invalid-input {
+  border: 2px solid #ff4444 !important;
+  background-color: #ffdddd !important;
+  transition: all 0.3s ease;
+}
+
+.shake-animation {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
   }
 }
