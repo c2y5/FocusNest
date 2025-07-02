@@ -116,8 +116,9 @@ def settings():
         data = request.json
         data["user_id"] = session["user"]["id"]
 
-        if re.match("^guest_[A-Z0-9]{8}$", session["user"]["id"]) and if "preferredName" in data and data["preferredName"]:
-            return jsonify({"error": "Guest users cannot change their preferred name"}), 403
+        if re.match("^guest_[A-Z0-9]{8}$", session["user"]["id"]):
+            if "preferredName" in data and data["preferredName"]:
+                return jsonify({"error": "Guest users cannot change their preferred name"}), 403
 
         mongo.db.settings.update_one(
             {"user_id": session["user"]["id"]},
