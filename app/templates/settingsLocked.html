@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80vh; text-align: center; padding: 2rem; max-width: 600px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <i class="fas fa-lock" style="font-size: 4rem; color: var(--accent); margin-bottom: 1rem;"></i>
+        <h3 style="color: var(--text-light); margin-bottom: 1rem;">Settings locked in Guest mode</h3>
+        <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 500px;">
+            To unlock all settings and customization options, please log in.
+        </p>
+        <div class="cta-buttons" style="display: flex; justify-content: center; gap: 1rem; width: 100%;">
+            <a href="/login" class="cta-primary">
+                <i class="fas fa-sign-in-alt btn-icon" style="margin-right: 0.5rem;"></i> Log In
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
