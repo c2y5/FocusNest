@@ -29,6 +29,7 @@ def create_app():
     from .flashcards.routes import flashcard_bp
     from .settings.routes import set_bp
     from .timer.routes import timer_bp
+    from .guest.routes import guest_bp
 
     config_oauth(app)
 
@@ -39,7 +40,8 @@ def create_app():
     app.register_blueprint(flashcard_bp)
     app.register_blueprint(set_bp)
     app.register_blueprint(timer_bp)
-
+    app.register_blueprint(guest_bp)
+    
     @app.route("/")
     def index():
         return render_template("index.html")
