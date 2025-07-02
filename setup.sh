@@ -10,8 +10,9 @@ mkdir -p logs
 
 gunicorn -b ":$PORT" "app:create_app()" \
     --timeout 120 \
-    --access-logfile logs/app.log \
+    --access-logfile - \
     --access-logformat '%(h)s - - [%(t)s] "%(r)s" %(s)s -' \
-    --capture-output \
     --error-logfile logs/error.log \
-    --log-level info
+    --log-level info \
+    --capture-output \
+    | tee -a logs/app.log
