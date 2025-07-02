@@ -204,6 +204,4 @@ def get_management_api_token():
         "audience": audience
     })
 
-    print("Auth0 Token Response:", response.json())
-
     return response.json()["access_token"]
