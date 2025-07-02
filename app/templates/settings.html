@@ -89,6 +89,42 @@
                 </label>
             </div>
         </div>
+
+        <div class="settings-section">
+            <div class="section-title-container">
+                <h2 class="section-title">Account Linking</h2>
+            </div>
+            
+            <div class="setting-item">
+                <div class="link-button-container">
+                    <div class="toggle-label-group">
+                        <label class="setting-label">Google</label>
+                        <p class="setting-description">Connect your Google account for easy login</p>
+                    </div>
+                    <button class="link-button" id="linkGoogle">Connect</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="link-button-container">
+                    <div class="toggle-label-group">
+                        <label class="setting-label">GitHub</label>
+                        <p class="setting-description">Connect your GitHub account for easy login</p>
+                    </div>
+                    <button class="link-button" id="linkGithub">Connect</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="link-button-container">
+                    <div class="toggle-label-group">
+                        <label class="setting-label">Spotify</label>
+                        <p class="setting-description">Connect your Spotify account for music integration</p>
+                    </div>
+                    <button class="link-button" id="linkSpotify">Connect</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="settings-footer">
@@ -98,5 +134,6 @@
 </div>
 
 <script src="/static/js/settingsHandler.js"></script>
+<script src="/static/js/linkingHandler.js"></script>
 
 {% endblock %}
