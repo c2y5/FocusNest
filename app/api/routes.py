@@ -7,6 +7,7 @@ from bson.objectid import ObjectId
 import datetime
 import math
 import requests
+import re
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -114,6 +115,9 @@ def settings():
     elif request.method == "POST":
         data = request.json
         data["user_id"] = session["user"]["id"]
+
+        if re.match("^guest_[A-Z0-9]{8}$", session["user"]["id"]) and if "preferredName" in data and data["preferredName"]:
+            return jsonify({"error": "Guest users cannot change their preferred name"}), 403
 
         mongo.db.settings.update_one(
             {"user_id": session["user"]["id"]},
