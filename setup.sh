@@ -9,5 +9,5 @@ pip install -r requirements.txt
 gunicorn -b ":$PORT" "app:create_app()" \
   --timeout 120 \
   --access-logfile - \
-  --error-logfile app.log \
-  --capture-output
+  --error-logfile - \
+  --capture-output 2>&1 | tee -a app.log
