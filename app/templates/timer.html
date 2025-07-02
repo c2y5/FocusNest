@@ -1,42 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusNest - Pomodoro Timer</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="icon" href="/static/img/favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="app-container">
-        <main class="content">
-            <div class="error-container">
-                <div class="error-content">
-                    <h1 class="error-code gradient-text">Timer</h1>
-                    <h2 class="error-title">Coming Soon</h2>
-                    <p class="error-message">The page you're looking for is being worked on!</p>
-                    <div class="error-actions">
-                    <a href="/" class="cta-primary">
-                        <span>Return Home</span>
-                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="/dashboard" class="cta-secondary">
-                        <span>Go to Dashboard</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    </div>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="timer-fullpage">
+    <div class="timer-container">
+        <div class="timer-card">
+            <div class="ctimer-header">
+                <h1>Pomodoro Timer</h1>
+                <button class="settings-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+                <div class="ctimer-options">
+                    <button class="ctimer-option active" data-mode="work">Work</button>
+                    <button class="ctimer-option" data-mode="shortBreak">Short Break</button>
+                    <button class="ctimer-option" data-mode="longBreak">Long Break</button>
                 </div>
-                <div class="error-graphics">
-                    <div class="error-gradient top-right"></div>
-                    <div class="error-gradient bottom-left"></div>
-                </div>
-                </div>
-        </main>
+            </div>
+            
+            <div class="ctimer-display">
+                <span class="ctimer-minutes">25</span>:<span class="ctimer-seconds">00</span>
+            </div>
+            
+            <div class="ctimer-controls">
+                <button class="ctimer-btn start-btn">Start</button>
+                <button class="ctimer-btn reset-btn">Reset</button>
+            </div>
+            
+            <div class="ctimer-stats">
+                <span class="pomodoro-count">Pomodoros: 0</span>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+
+    <div class="settings-modal hidden">
+        <div class="modal-content">
+            <h2>Timer Settings</h2>
+            <div class="settings-scrollable">
+                <div class="setting-group">
+                    <label for="work-duration">Work Duration (1-60)</label>
+                    <input type="number" id="work-duration" min="1" max="60" value="25">
+                    <span class="setting-unit">min</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="short-break-duration">Short Break (1-30)</label>
+                    <input type="number" id="short-break-duration" min="1" max="30" value="5">
+                    <span class="setting-unit">min</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="long-break-duration">Long Break (1-60)</label>
+                    <input type="number" id="long-break-duration" min="1" max="60" value="15">
+                    <span class="setting-unit">min</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="long-break-interval">Long Break Interval</label>
+                    <input type="number" id="long-break-interval" min="1" value="4">
+                    <span class="setting-unit">sessions</span>
+                </div>
+                
+                <div class="setting-group checkbox-setting">
+                    <input type="checkbox" id="auto-start-short-break" checked>
+                    <label for="auto-start-short-break">Auto-start short breaks</label>
+                </div>
+                
+                <div class="setting-group checkbox-setting">
+                    <input type="checkbox" id="auto-start-long-break" checked>
+                    <label for="auto-start-long-break">Auto-start long breaks</label>
+                </div>
+                
+                <div class="setting-group checkbox-setting">
+                    <input type="checkbox" id="auto-start-work" checked>
+                    <label for="auto-start-work">Auto-start work sessions</label>
+                </div>
+                
+                <div class="setting-group checkbox-setting">
+                    <input type="checkbox" id="auto-switch-tabs" checked>
+                    <label for="auto-switch-tabs">Auto-switch modes</label>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn cancel-settings">Cancel</button>
+                <button class="modal-btn save-settings">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/timerSettings.js"></script>
+<script src="/static/js/streakHandler.js"></script>
+
+{% endblock %}
