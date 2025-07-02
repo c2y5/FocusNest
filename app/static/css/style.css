@@ -1114,7 +1114,7 @@ p {
 
 .task-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 0.75rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
@@ -1128,11 +1128,16 @@ p {
 .task-checkbox {
   margin-right: 0.75rem;
   accent-color: var(--primary);
+  margin-top: 0.25rem;
 }
 
 .task-text {
   flex: 1;
   color: var(--text-light);
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  margin-right: 0.5rem;
 }
 
 .task-text.completed {
