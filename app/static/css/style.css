@@ -1163,7 +1163,7 @@ p {
 .timer-card {
   background: var(--card-light);
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
@@ -1174,11 +1174,13 @@ p {
   flex-direction: column;
   align-items: center;
   margin-top: 1.5rem;
+  width: 100%;
 }
 
 .timer-container {
-  flex: 2;
-  min-width: 400px;
+  flex: 3;
+  min-width: auto;
+  width: 100%;
 }
 
 .ctimer-header {
@@ -1220,10 +1222,10 @@ p {
 }
 
 .ctimer-display {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 600;
   font-family: "Inter", monospace;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
   background: var(--primary);
   -webkit-background-clip: text;
   background-clip: text;
@@ -1240,12 +1242,13 @@ p {
 }
 
 .ctimer-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 2rem;
   border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
+  font-size: 1.1rem;
 }
 
 .start-btn {
@@ -1275,28 +1278,57 @@ p {
 }
 
 @media (max-width: 768px) {
+  .timer-container {
+    min-width: 100% !important;
+    width: 100%;
+    flex: 1;
+  }
+
   .timer-card {
-    max-width: 100%;
-    padding: 1.25rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0 !important;
   }
 
   .ctimer-display {
-    font-size: 3rem;
+    font-size: 2.5rem !important;
+  }
+
+  .ctimer-options {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .ctimer-option {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .ctimer-controls {
+    flex-wrap: wrap;
   }
 
   .ctimer-btn {
-    padding: 0.6rem 1.2rem;
+    flex: 1;
+    min-width: 120px;
   }
 }
 
 @media (max-width: 480px) {
   .ctimer-display {
-    font-size: 2.5rem;
+    font-size: 2rem !important;
   }
 
   .ctimer-option {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .ctimer-btn {
+    padding: 0.5rem !important;
+    font-size: 0.9rem;
   }
 }
 
