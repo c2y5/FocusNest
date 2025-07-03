@@ -108,10 +108,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 await this.handleAvatarUpload(e.target.files[0]);
                 e.target.value = "";
             });
-
-            this.removeButton.addEventListener("click", async () => {
-                await this.removeAvatar();
-            });
         }
         
         async saveSettings() {
