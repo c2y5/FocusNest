@@ -4,7 +4,7 @@
 - [What is FocusNest?](#what-is-focusnest)
 - [Key Features](#key-features)
   - [Quick Start](#quick-start)
-  - [Helpful Tools](#helpful-tools)
+  - [Helpful Tools](#helpful-tools%EF%B8%8F)
   - [Extras](#extras)
 - [Preview](#preview)
   - [Dashboard](#dashboard)
