@@ -180,18 +180,32 @@ class TasksHandler {
     this.tasks.forEach(task => {
       const taskElement = document.createElement("div");
       taskElement.className = "task-item";
-      taskElement.innerHTML = `
-        <input type="checkbox" class="task-checkbox" ${task.completed ? "checked" : ""}>
-        <span class="task-text ${task.completed ? "completed" : ""}">${task.title}</span>
-        <div class="task-actions">
-          <button class="task-btn edit-btn">✏️</button>
-          <button class="task-btn delete-btn">🗑️</button>
-        </div>
-      `;
       
-      const checkbox = taskElement.querySelector(".task-checkbox");
-      const editBtn = taskElement.querySelector(".edit-btn");
-      const deleteBtn = taskElement.querySelector(".delete-btn");
+      const checkbox = document.createElement('input');
+      checkbox.type = "checkbox";
+      checkbox.className = "task-checkbox";
+      checkbox.checked = task.completed;
+      
+      const taskText = document.createElement("span");
+      taskText.className = `task-text ${task.completed ? "completed" : ""}`;
+      taskText.textContent = task.title;
+      
+      const taskActions = document.createElement('div');
+      taskActions.className = "task-actions";
+      
+      const editBtn = document.createElement('button');
+      editBtn.className = "task-btn edit-btn";
+      editBtn.textContent = "✏️";
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = "task-btn delete-btn";
+      deleteBtn.textContent = "🗑️";
+      
+      taskActions.appendChild(editBtn);
+      taskActions.appendChild(deleteBtn);
+      taskElement.appendChild(checkbox);
+      taskElement.appendChild(taskText);
+      taskElement.appendChild(taskActions);
       
       checkbox.addEventListener("change", () => this.toggleTaskComplete(task._id, task.completed));
       editBtn.addEventListener("click", () => {
@@ -199,7 +213,7 @@ class TasksHandler {
         this.showTaskInput(task.title);
       });
       deleteBtn.addEventListener("click", () => this.deleteTask(task._id));
-      
+
       this.elements.tasksList.appendChild(taskElement);
     });
   }
