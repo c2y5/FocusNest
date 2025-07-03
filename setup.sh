@@ -9,6 +9,6 @@ pip install -r requirements.txt
 gunicorn -b ":$PORT" "app:create_app()" \
   --timeout 120 \
   --access-logfile - \
-  --access-logformat '%(h)s - - [%(t)s] "%(r)s" %(s)s -' \
+  --access-logformat '%(h)s - - %(t)s "%(r)s" %(s)s -' \
   --error-logfile - \
   --capture-output 2>&1 | tee -a app.log
