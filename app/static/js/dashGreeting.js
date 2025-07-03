@@ -5,20 +5,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const username = document.getElementById("username");
         fetch("/api/settings").then(response => response.json()).then(sdata => {
-            if (sdata.preferredName) {
-                username.textContent = sdata.preferredName;
-            } else if (data.name.includes("@")) {
-                username.textContent = data.nickname
-            } else {
-                username.textContent = data.name;
-            }
-
             if (sdata.preferredPicture) {
                 document.getElementById("profile-picture").src = sdata.preferredPicture;
             } else if (data.picture) {
                 document.getElementById("profile-picture").src = data.picture;
             } else {
                 document.getElementById("profile-picture").src = "/static/img/default-profile.png";
+            }
+            
+            if (sdata.preferredName) {
+                username.textContent = sdata.preferredName;
+            } else if (data.name.includes("@")) {
+                username.textContent = data.nickname
+            } else {
+                username.textContent = data.name;
             }
         }).catch(error => {
             console.error("Error fetching settings:", error);

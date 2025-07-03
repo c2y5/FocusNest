@@ -292,8 +292,7 @@ input:checked + .toggle-slider:before {
   z-index: 2;
 }
 
-.save-button,
-.cancel-button {
+.save-button {
   padding: 0.9rem 1.75rem;
   border-radius: 8px;
   font-weight: 600;
@@ -303,6 +302,17 @@ input:checked + .toggle-slider:before {
   text-align: center;
   font-size: 1rem;
 }
+
+.cancel-button {
+  padding: 0.9rem 1.75rem;
+  border-radius: 8px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  min-width: 120px;
+  text-align: center;
+  font-size: 1rem;
+} 
 
 .save-button {
   background: linear-gradient(135deg, var(--primary), var(--primary-light));
