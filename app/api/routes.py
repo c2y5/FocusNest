@@ -1,15 +1,39 @@
 # app/api/routes.py
 # type: ignore
 
-from flask import Blueprint, session, request, jsonify
+from flask import Blueprint, session, request, jsonify, current_app
 from app import mongo
 from bson.objectid import ObjectId
 import datetime
 import math
 import requests
 import re
+from PIL import Image
+import imghdr
+import os
+import random
+import string
+from io import BytesIO
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
+
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def is_image(file_stream):
+    file_type = imghdr.what(file_stream)
+    if file_type not in ALLOWED_EXTENSIONS:
+        return False
+    
+    try:
+        img = Image.open(file_stream)
+        img.verify()
+        file_stream.seek(0)
+        return True
+    except:
+        return False
 
 @api_bp.route("tasks", methods=["GET", "POST", "DELETE", "PATCH"])
 def tasks():
@@ -90,6 +114,7 @@ def settings():
         if not settings:
             settings = {
                 "preferredName": "",
+                "preferredPicture": "",
                 "pomodoroTimer": {
                     "workDuration": 25,
                     "shortBreakDuration": 5,
@@ -110,6 +135,8 @@ def settings():
             return settings, 200
         
         settings["_id"] = str(settings["_id"])
+        if not settings["preferredPicture"]:
+            settings["preferredPicture"] = session["user"]["picture"]
 
         return jsonify(settings)
     elif request.method == "POST":
@@ -303,3 +330,67 @@ def get_quote():
         }), 200
     except:
         return jsonify({"quote": '"The secret of getting ahead is getting started."'}), 200
+    
+@api_bp.route("avatar/upload", methods=["POST"])
+def upload_avatar():
+    if not session.get("user"):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    
+    file = request.files["file"]
+
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+    
+    if file and allowed_file(file.filename):
+        settings = mongo.db.settings.find_one({"user_id": session["user"]["id"]})
+
+        if settings["preferredPicture"] and settings["preferredPicture"].startswith("/static/avatars/"):
+            old_avatar_path = os.path.join(current_app.root_path, settings["preferredPicture"].lstrip("/"))
+            if os.path.exists(old_avatar_path):
+                os.remove(old_avatar_path)
+
+        ext = file.filename.rsplit(".", 1)[1].lower()
+        _r = "".join(random.choices(string.ascii_letters + string.digits, k=12))
+        filename = f"avatar_{_r}.{ext}"
+
+        if not is_image(file.stream):
+            return jsonify({"error": "File is not a valid image"}), 400
+        
+        file.stream.seek(0)
+
+        try:
+            img = Image.open(file.stream).convert("RGBA" if ext=="png" else "RGB")
+        except Exception:
+            return jsonify({"error": "Failed to process image"}), 400
+
+        img = img.resize((512, 512))
+
+        img_io = BytesIO()
+        img.save(img_io, format=img.format or "PNG")
+        img_io.seek(0)
+
+        upload_folder = os.path.join(current_app.root_path, "static", "avatars")
+
+        os.makedirs(upload_folder, exist_ok=True)
+
+        file_path = os.path.join(upload_folder, filename)
+        with open(file_path, "wb") as f:
+            f.write(img_io.read())
+
+        settings["preferredPicture"] = f"/static/avatars/{filename}"
+
+        mongo.db.settings.update_one(
+            {"user_id": session["user"]["id"]},
+            {"$set": settings},
+            upsert=True
+        )
+
+        return jsonify({
+            "status": "success",
+            "file_path": f"/static/avatars/{filename}"
+        }), 200
+    
+    return jsonify({"error": "Invalid file type"}), 400

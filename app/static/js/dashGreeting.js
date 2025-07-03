@@ -1,10 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     fetch("/api/@me").then(response => response.json()).then(data => {
-        if (data.picture) {
-            document.getElementById("profile-picture").src = data.picture;
-        } else {
-            document.getElementById("profile-picture").src = "/static/img/default-profile.png";
-        }
 
         document.getElementById("profile-picture").hidden = false;
 
@@ -16,6 +11,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 username.textContent = data.nickname
             } else {
                 username.textContent = data.name;
+            }
+
+            if (data.preferredPicture) {
+                document.getElementById("profile-picture").src = data.preferredPicture;
+            } else if (data.picture) {
+                document.getElementById("profile-picture").src = data.picture;
+            } else {
+                document.getElementById("profile-picture").src = "/static/img/default-profile.png";
             }
         }).catch(error => {
             console.error("Error fetching settings:", error);

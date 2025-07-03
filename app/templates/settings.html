@@ -17,6 +17,18 @@
                 <label for="preferredName" class="setting-label">Preferred Name</label>
                 <input type="text" id="preferredName" class="setting-input" placeholder="Enter your name">
             </div>
+            <div class="setting-item">
+                <label class="setting-label">Profile Picture</label>
+                <div class="avatar-upload-container">
+                    <div class="avatar-preview" id="avatarPreview">
+                        <img id="avatarImage" src="/static/img/default-profile.png" alt="Profile Picture">
+                    </div>
+                    <div class="avatar-upload-controls">
+                        <input type="file" id="avatarUpload" accept=".jpg,.jpeg,.png" style="display: none;">
+                        <button class="upload-button" id="uploadButton">Upload New</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="settings-section">

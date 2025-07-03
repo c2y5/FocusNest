@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", function() {
             this.settingsPage = document.querySelector(".settings-page");
             
             this.preferredNameInput = document.getElementById("preferredName");
+            this.uploadButton = document.getElementById("uploadButton");
+            this.avatarUpload = document.getElementById("avatarUpload");
+            this.avatarImage = document.getElementById("avatarImage");
+            this.avatarPreview = document.getElementById("avatarPreview");
             
             this.workDurationInput = document.getElementById("workDuration");
             this.shortBreakInput = document.getElementById("shortBreakDuration");
@@ -17,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
             this.defaultSettings = {
                 preferredName: "",
+                preferredPicture: "/static/img/default-profile.png",
                 pomodoroTimer: {
                     workDuration: 25,
                     shortBreakDuration: 5,
@@ -73,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         updateUI() {
             this.preferredNameInput.value = this.currentSettings.preferredName || "";
+            this.avatarImage.src = this.currentSettings.preferredPicture || "/static/img/default-profile.png";
             
             const pomodoroSettings = this.currentSettings.pomodoroTimer || this.defaultSettings.pomodoroTimer;
             
@@ -92,6 +98,19 @@ document.addEventListener("DOMContentLoaded", function() {
             
             this.cancelButton.addEventListener("click", () => {
                 this.loadSettings();
+            });
+
+            this.uploadButton.addEventListener("click", () => {
+                this.avatarUpload.click();
+            });
+
+            this.avatarUpload.addEventListener("change", async (e) => {
+                await this.handleAvatarUpload(e.target.files[0]);
+                e.target.value = "";
+            });
+
+            this.removeButton.addEventListener("click", async () => {
+                await this.removeAvatar();
             });
         }
         
@@ -216,6 +235,42 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             } else {
                 alert(`${title}: ${body}`);
+            }
+        }
+
+        async handleAvatarUpload(file) {
+            if (!file) return;
+
+            const validTypes = ["image/jpeg", "image/png"];
+            if (!validTypes.includes(file.type)) {
+                this.showNotification("Invalid File", "Please upload a JPG or PNG image");
+                return;
+            }
+
+            if (file.size > 1024 * 1024) {
+                this.showNotification("File Too Large", "Maximum size is 1MB");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch("/api/avatar/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error("Upload failed");
+
+                const result = await response.json();
+                
+                this.avatarImage.src = result.file_path;
+                
+                this.showNotification("Success", "Profile picture updated");
+            } catch (error) {
+                console.error("Avatar upload error:", error);
+                this.showNotification("Error", "Failed to upload profile picture");
             }
         }
     }
