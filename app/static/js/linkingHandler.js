@@ -7,7 +7,7 @@ function initLinkingButtons() {
     const providers = {
         "linkGoogle": "google-oauth2",
         "linkGithub": "github",
-        "linkSpotify": "spotify-playback",
+        "linkSpotify": "spotify",
         "linkSlack": "sign-in-with-slack"
     };
 
@@ -55,7 +55,7 @@ function handleLinkClick(provider) {
 }
 
 function checkLinkStatus() {
-    const providers = ["google-oauth2", "github", "spotify-playback", "sign-in-with-slack"];
+    const providers = ["google-oauth2", "github", "spotify", "sign-in-with-slack"];
     
     providers.forEach(provider => {
         fetch(`/is_linked/${provider}`)
@@ -75,7 +75,7 @@ function updateLinkButton(provider, isLinked) {
     const buttonMap = {
         "google-oauth2": "linkGoogle",
         "github": "linkGithub",
-        "spotify-playback": "linkSpotify",
+        "spotify": "linkSpotify",
         "sign-in-with-slack": "linkSlack"
     };
     

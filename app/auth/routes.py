@@ -88,7 +88,6 @@ def link_callback():
     return_to = session.pop("return_to", None)
 
     token = oauth.auth0.authorize_access_token()
-    print("OAuth token response:", token)
 
     secondary_info = token.get("userinfo", {})
     secondary_user_id = secondary_info.get("user_id") or secondary_info.get("sub")
