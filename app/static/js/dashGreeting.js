@@ -4,17 +4,17 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("profile-picture").hidden = false;
 
         const username = document.getElementById("username");
-        fetch("/api/settings").then(response => response.json()).then(data => {
-            if (data.preferredName) {
-                username.textContent = data.preferredName;
+        fetch("/api/settings").then(response => response.json()).then(sdata => {
+            if (sdata.preferredName) {
+                username.textContent = sdata.preferredName;
             } else if (data.name.includes("@")) {
                 username.textContent = data.nickname
             } else {
                 username.textContent = data.name;
             }
 
-            if (data.preferredPicture) {
-                document.getElementById("profile-picture").src = data.preferredPicture;
+            if (sdata.preferredPicture) {
+                document.getElementById("profile-picture").src = sdata.preferredPicture;
             } else if (data.picture) {
                 document.getElementById("profile-picture").src = data.picture;
             } else {
