@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
             this.startBtn.addEventListener("click", () => {
                 if (!this.triggeredStreak) {
                     streakHandler.updateStreak();
+                    this.triggeredStreak = true;
                 }
 
                 if (this.isRunning) {

@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const totalCount = document.getElementById("totalCount");
     const masteryPercentage = document.getElementById("masteryPercentage");
 
+    const triggeredStreak = false;
+
     let flashcards = [];
     let currentCard = 0;
     let knownCards = new Set();
@@ -172,6 +174,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function flipCard() {
         if (flashcards.length === 0) return;
+
+        if (!this.triggeredStreak) {
+            streakHandler.updateStreak();
+            this.triggeredStreak = true;
+        }
         
         currentFlashcard.classList.toggle("flipped");
         isFlipped = !isFlipped;
@@ -212,6 +219,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function updateProgress() {
+        if (!this.triggeredStreak) {
+            streakHandler.updateStreak();
+            this.triggeredStreak = true;
+        }
+
         const total = flashcards.length;
         const known = knownCards.size;
         const percentage = total > 0 ? Math.round((known / total) * 100) : 0;

@@ -8,9 +8,25 @@ import certifi
 
 mongo = PyMongo()
 
+def verify_config(app):
+    required_vars = [
+        "SECRET_KEY", "MONGO_URI", "AUTH0_CLIENT_ID", "AUTH0_CLIENT_SECRET",
+        "AUTH0_DOMAIN", "AUTH0_CALLBACK_URL", "AUTH0_LINK_CALLBACK_URL",
+        "AUTH0_AUDIENCE_DOMAIN", "AI_API_URL", "AI_API_KEY"
+    ]
+    
+    for var in required_vars:
+        if not app.config.get(var):
+            print(f"Missing configuration variable: {var}")
+            return False
+    return True
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    if not verify_config(app):
+        raise ValueError("Configuration verification failed. Please check your environment variables.")
     
     mongo.init_app(app, tls=True, tlsCAFile=certifi.where())
     
