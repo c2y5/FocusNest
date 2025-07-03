@@ -18,3 +18,6 @@ class Config:
     AUTH0_CALLBACK_URL = os.getenv("AUTH0_CALLBACK_URL")
     AUTH0_LINK_CALLBACK_URL = os.getenv("AUTH0_LINK_CALLBACK_URL")
     AUTH0_AUDIENCE_DOMAIN = os.getenv("AUTH0_AUDIENCE_DOMAIN")
+
+    AI_API_URL = os.getenv("AI_API_URL")
+    AI_API_KEY = os.getenv("AI_API_KEY", "your_api_key_here")

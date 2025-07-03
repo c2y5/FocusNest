@@ -1,42 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusNest - Flashcards</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="icon" href="/static/img/favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="app-container">
-        <main class="content">
-            <div class="error-container">
-                <div class="error-content">
-                    <h1 class="error-code gradient-text">FC</h1>
-                    <h2 class="error-title">Coming Soon</h2>
-                    <p class="error-message">The page you're looking for is being worked on!</p>
-                    <div class="error-actions">
-                    <a href="/" class="cta-primary">
-                        <span>Return Home</span>
-                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="/dashboard" class="cta-secondary">
-                        <span>Go to Dashboard</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/flashcardsPage.css">
+<div class="flashcards-page">
+    <div class="flashcards-content">
+        <div class="flashcards-generator">
+            <div class="generator-section">
+                <div class="section-title-container">
+                    <h2 class="section-title">Create or Upload</h2>
+                </div>
+
+                <label for="notesUpload" class="setting-label">Upload Notes (.txt or .pdf)</label>
+                <div class="custom-file-wrapper">
+                    <input type="file" id="notesUpload" class="setting-file" accept=".txt,.pdf">
+                    <span id="fileName" class="file-name-text">No file chosen</span>
+                </div>
+
+                <div class="generator-input">
+                    <label for="flashcardTopic" class="setting-label">Topic</label>
+                    <input type="text" id="flashcardTopic" class="setting-input" placeholder="e.g., Biology, History">
+                </div>
+
+                <div class="generator-input">
+                    <label for="flashcardDetails" class="setting-label">Details</label>
+                    <textarea id="flashcardDetails" class="setting-textarea" placeholder="Paste notes or text here..."></textarea>
+                </div>
+
+                <button class="generate-button" id="generateFlashcards">
+                    <i class="fas fa-magic btn-icon"></i> Generate with AI
+                </button>
+            </div>
+        </div>
+
+        <div class="flashcards-viewer">
+            <div class="viewer-header">
+                <h2 class="viewer-title">Current Set: <span id="currentSetTitle">Untitled</span></h2>
+                <div class="viewer-controls">
+                    <button class="viewer-control-btn" id="shuffleCards">
+                        <i class="fas fa-random"></i> Shuffle
+                    </button>
+                </div>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="currentFlashcard">
+                    <div class="flashcard-front">
+                        <p id="flashcardQuestion">Click "Generate" or upload notes to begin</p>
+                    </div>
+                    <div class="flashcard-back hidden">
+                        <p id="flashcardAnswer">Answer will show here</p>
                     </div>
                 </div>
-                <div class="error-graphics">
-                    <div class="error-gradient top-right"></div>
-                    <div class="error-gradient bottom-left"></div>
+
+                <div class="flashcard-nav">
+                    <button class="nav-button" id="prevCard" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <span class="card-counter">
+                        <span id="currentCardIndex">0</span>/<span id="totalCards">0</span>
+                    </span>
+                    <button class="nav-button" id="nextCard" disabled>
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
+
+                <div class="flashcard-actions">
+                    <button class="action-button flip-button" id="flipCard" disabled>
+                        <i class="fas fa-sync-alt"></i> Flip
+                    </button>
+                    <button class="action-button success-button" id="knowCard" disabled>
+                        <i class="fas fa-check"></i> Know
+                    </button>
+                    <button class="action-button danger-button" id="dontKnowCard" disabled>
+                        <i class="fas fa-times"></i> Don't Know
+                    </button>
                 </div>
-        </main>
+            </div>
+
+            <div class="progress-section">
+                <h3 class="progress-title">Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="masteryProgress" style="width: 0%"></div>
+                </div>
+                <div class="progress-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="knownCount">0</span>
+                        <span class="stat-label">Known</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalCount">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="masteryPercentage">0%</span>
+                        <span class="stat-label">Mastery</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<script src="/static/js/flashcardsHandler.js"></script>
+
+{% endblock %}
