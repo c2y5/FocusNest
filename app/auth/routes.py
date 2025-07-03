@@ -1,11 +1,13 @@
 # app/auth/routes.py
 # type: ignore
 
-from flask import Blueprint, redirect, session, url_for, jsonify
+from flask import Blueprint, redirect, session, url_for, jsonify, request
 from authlib.integrations.flask_client import OAuth
 from flask import current_app as cpp
 import requests
 import re
+from datetime import datetime, timedelta, timezone
+from app import mongo
 
 auth_bp = Blueprint("auth", __name__)
 oauth = OAuth()
@@ -17,7 +19,9 @@ def config_oauth(app):
         "auth0",
         client_id=app.config["AUTH0_CLIENT_ID"],
         client_secret=app.config["AUTH0_CLIENT_SECRET"],
-        client_kwargs={"scope": "openid profile email"},
+        client_kwargs={
+            "scope": "openid profile email offline_access user-read-playback-state user-modify-playback-state user-read-currently-playing streaming"
+        },
         server_metadata_url=f"https://{app.config['AUTH0_DOMAIN']}/.well-known/openid-configuration"
     )
 
@@ -61,6 +65,9 @@ def link_account(provider):
     if re.match("^guest_[A-Z0-9]{8}$", session["user"]["id"]):
         return jsonify({"error": "Guest accounts cannot link to other providers"}), 403
     
+    if "return_to" in request.args:
+        session["return_to"] = request.args["return_to"]
+    
     session["linking_provider"] = provider
 
     return oauth.auth0.authorize_redirect(
@@ -74,13 +81,17 @@ def link_account(provider):
 def link_callback():
     if "user" not in session or "linking_provider" not in session:
         return redirect("/login")
-    
+
     if re.match("^guest_[A-Z0-9]{8}$", session["user"]["id"]):
         return jsonify({"error": "Guest accounts cannot link to other providers"}), 403
-    
+
+    return_to = session.pop("return_to", None)
+
     token = oauth.auth0.authorize_access_token()
+    print("OAuth token response:", token)
+
     secondary_info = token.get("userinfo", {})
-    secondary_user_id = secondary_info.get("sub")
+    secondary_user_id = secondary_info.get("user_id") or secondary_info.get("sub")
 
     if not secondary_user_id:
         return jsonify({"error": "No secondary identity returned"}), 400
@@ -88,35 +99,34 @@ def link_callback():
     if secondary_user_id == session["user"]["id"]:
         return jsonify({"error": "Cannot link the same account"}), 400
 
-    primary_user_id = session["user"]["id"]
-
     parts = secondary_user_id.split("|")
-
     if len(parts) == 2:
-        provider = parts[0]
-        user_id = parts[1]
+        provider, user_id = parts
     elif len(parts) == 3:
         provider = parts[0]
         user_id = f"{parts[1]}|{parts[2]}"
     else:
         return jsonify({"error": "Unknown identity format", "sub": secondary_user_id}), 400
 
+    domain = cpp.config["AUTH0_DOMAIN"]
+    mgmt_token = get_management_api_token()
+    headers = {"Authorization": f"Bearer {mgmt_token}"}
     payload = {
         "provider": provider,
         "user_id": user_id
     }
 
-    domain = cpp.config["AUTH0_DOMAIN"]
-    mgmt_token = get_management_api_token()
-    headers = {"Authorization": f"Bearer {mgmt_token}"}
-
+    primary_user_id = session["user"]["id"]
     url = f"https://{domain}/api/v2/users/{primary_user_id}/identities"
     response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code == 201:
-        return redirect("/settings")
+        return redirect(return_to or "/settings")
     else:
-        return jsonify({"error": "Failed to link account", "details": response.json()}), 400
+        return jsonify({
+            "error": "Failed to link account",
+            "details": response.json()
+        }), 400
 
 @auth_bp.route("/is_linked/<provider>")
 def is_linked(provider):

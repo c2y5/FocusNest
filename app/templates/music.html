@@ -1,42 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusNest - Music</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="icon" href="/static/img/favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="app-container">
-        <main class="content">
-            <div class="error-container">
-                <div class="error-content">
-                    <h1 class="error-code gradient-text">Music</h1>
-                    <h2 class="error-title">Coming Soon</h2>
-                    <p class="error-message">The page you're looking for is being worked on!</p>
-                    <div class="error-actions">
-                    <a href="/" class="cta-primary">
-                        <span>Return Home</span>
-                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="/dashboard" class="cta-secondary">
-                        <span>Go to Dashboard</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    </div>
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/musicPage.css">
+<div class="music-fullpage">
+    <div class="music-container">
+        <div class="music-card">
+            <div class="music-header">
+                <h1>Music</h1>
+            </div>
+            
+            <div class="music-display">
+                <img id="music-album-art" src="/static/img/music-placeholder.jpg" alt="Album Art" class="album-art">
+                <div class="track-info">
+                    <h2 id="music-track-name">Not Playing</h2>
                 </div>
-                <div class="error-graphics">
-                    <div class="error-gradient top-right"></div>
-                    <div class="error-gradient bottom-left"></div>
+            </div>
+            
+            <div class="music-controls">
+                <button id="music-prev" class="music-btn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button id="music-play" class="music-btn play-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="music-next" class="music-btn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+            </div>
+            
+            <div class="music-progress">
+                <div class="progress-bar">
+                    <div id="music-progress" class="progress-fill"></div>
                 </div>
+                <div class="time-display">
+                    <span id="music-current-time">0:00</span>
+                    <span id="music-duration">0:00</span>
                 </div>
-        </main>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<script src="/static/js/musicHandler.js"></script>
+
+{% endblock %}

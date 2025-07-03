@@ -1,6 +1,9 @@
 # Avatars
 app/static/avatars/*.*
 
+# Music
+app/static/music/*.*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

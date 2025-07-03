@@ -1,0 +1,249 @@
+.music-fullpage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  padding: 2rem;
+}
+
+.music-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.music-card {
+  background: var(--card-light);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.music-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.music-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.music-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.album-art {
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  margin-bottom: 1.5rem;
+}
+
+.track-info {
+  text-align: center;
+}
+
+.track-info h2 {
+  font-size: 1.5rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.track-info p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.music-controls {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.music-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: var(--text-light);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-btn {
+  background: var(--primary);
+  width: 70px;
+  height: 70px;
+}
+
+.music-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.play-btn:hover {
+  background: var(--primary-light);
+}
+
+.music-progress {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.music-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.music-action-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: var(--text-light);
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.music-action-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.music-action-btn i {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .music-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .album-art {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .music-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .music-header h1 {
+    font-size: 2rem;
+  }
+
+  .album-art {
+    width: 160px;
+    height: 160px;
+  }
+
+  .music-controls {
+    gap: 1.5rem;
+  }
+
+  .music-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  .play-btn {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.connect-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.connect-icon {
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.connect-prompt h2 {
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.connect-prompt p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  max-width: 300px;
+}
+
+.connect-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.connect-btn:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.connect-btn i {
+  font-size: 1.2rem;
+}
