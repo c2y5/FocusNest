@@ -84,6 +84,10 @@ def link_callback():
 
     if re.match("^guest_[A-Z0-9]{8}$", session["user"]["id"]):
         return jsonify({"error": "Guest accounts cannot link to other providers"}), 403
+    
+    error = request.args.get("error")
+    if error == "access_denied":
+        return redirect("/settings")
 
     return_to = session.pop("return_to", None)
 
