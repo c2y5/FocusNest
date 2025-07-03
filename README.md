@@ -4,7 +4,7 @@
 - [What is FocusNest?](#what-is-focusnest)
 - [Key Features](#key-features)
   - [Quick Start](#quick-start)
-  - [Helpful Tools](#helpful-tools-)
+  - [Helpful Tools](#helpful-tools)
   - [Extras](#extras)
 - [Preview](#preview)
   - [Dashboard](#dashboard)
@@ -45,13 +45,13 @@
 - Easy login or try as a guest
 - Clean, simple design
 
-### Helpful Tools ⚒️
+### Helpful Tools⚒️
 - **Timer**: Custom work/break sessions
 - **Flashcards**: Turn notes into study cards instantly
 - **Music**: Relaxing background sounds
 - **To-do List**: Keep track of what you need to do
 
-### Extras ✨
+### Extras✨
 - Streaks to keep you engaged
 - Mobile-friendly UI
 
@@ -298,7 +298,7 @@ FocusNest/
 └── setup.sh
 ```
 
---
+---
 
 # License 📄
 
