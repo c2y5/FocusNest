@@ -122,8 +122,8 @@
 
 3. **Update your ``.env``**
     - Copy the ``Client Id``, ``Client Secret`` and ``Domain`` and set them in ``.env``
-    - If you are NOT using custom domain, your ``Auth0 audience domain`` should be the same as the normal domain
-    - If you ARE using custom domain, the audience domain should be the default auth0 provided one
+    - If you are **NOT** using custom domain, your ``Auth0 audience domain`` should be the same as the normal domain
+    - If you **ARE** using custom domain, the audience domain should be the default auth0 provided one
 
     **Callback URLs**
     - Your ``AUTH0_CALLBACK_URL`` should be the url you are self-hosting from + ``/callback``. E.G. http://localhost:5000/callback
@@ -170,7 +170,7 @@
 - ```mongodb+srv://mongodb:<db_password>@<CLUSTERNAME>.<CLUSTERID>.mongodb.net/?retryWrites=true&w=majority&appName=<CLUSTERNAME>```
 
 - In your ``.env`` update ``MONGO_URI`` to the above, make sure to put in your ``db_password``
-- For me I added a ``/focusnest`` after the url: ``@cluster0.<id>.mongodb.net/focusnest?``
+- For me I added a ``/focusnest`` after the url: ``@<name>.<id>.mongodb.net/focusnest?``
 - You don't have to but I keep it like that for better view
 
 ## Setup AI configs
