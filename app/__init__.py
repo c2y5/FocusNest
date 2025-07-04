@@ -1,29 +1,12 @@
 # app/__init__.py
 # type: ignore
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from config import Config
 from flask_pymongo import PyMongo
 import certifi
-import logging
-from datetime import datetime
 
 mongo = PyMongo()
-
-def setup_logging():
-    logger = logging.getLogger('flask_app')
-    logger.setLevel(logging.INFO)
-
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-
-    log_format = '%(remote_addr)s - - [%(asctime)s] "%(method)s %(path)s HTTP/1.1" %(status)s -'
-    
-    formatter = logging.Formatter(log_format, datefmt="%d/%b/%Y:%H:%M:%S %z")
-    console_handler.setFormatter(formatter)
-
-    logger.addHandler(console_handler)
-    return logger
 
 
 def verify_config(app):
@@ -82,13 +65,6 @@ def create_app():
     def index():
         return render_template("index.html")
     
-    @app.before_request
-    def log_request():
-        if request.path == "/api/timer_session" and request.method == "POST":
-            return
-        
-        app.logger.info(f"[{request.headers.get('X-Real-IP', request.remote_addr)}] {request.method} {request.path}")
-
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template("error.html",
