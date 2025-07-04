@@ -399,11 +399,11 @@ def upload_avatar():
 def timer_session():
     if not session.get("user"):
         return jsonify({"error": "Unauthorized"}), 401
-    
-    if not session.get("timer_session"):
-        return jsonify({"error": "No timer session found"}), 404
 
     if request.method == "GET":
+        if not session.get("timer_session"):
+            return jsonify({"error": "No timer session found"}), 404
+        
         return jsonify(session["timer_session"]), 200
     elif request.method == "POST":
         if not request.json:
