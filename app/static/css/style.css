@@ -2288,6 +2288,7 @@ p {
   .guest-mode-btn {
     min-width: 220px;
     max-width: 220px;
+    font-size: 0.8rem;
   }
 
   .guest-mode-indicator {
