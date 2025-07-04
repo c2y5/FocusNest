@@ -29,11 +29,6 @@ html::-webkit-scrollbar {
   display: none;
 }
 
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 body::-webkit-scrollbar {
   display: none;
 }
@@ -53,6 +48,9 @@ body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
+  width: 100vw;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 h1,
