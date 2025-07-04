@@ -1943,3 +1943,10 @@ p {
 .social-icon:hover {
     color: var(--text-light);
 }
+
+.footer-copyright {
+    color: #718096;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
