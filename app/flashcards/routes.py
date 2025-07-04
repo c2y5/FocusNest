@@ -26,7 +26,7 @@ def get_api_headers():
 
 @flashcard_bp.route("/flashcards/generate", methods=["POST"])
 def generate_flashcards():
-    if not session.get("user_id"):
+    if not session.get("user"):
         return jsonify({"error": "Unauthorized"}), 401
     
     data = request.json
