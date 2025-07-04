@@ -224,7 +224,7 @@ def log_emotion():
         )
 
         if not last_log:
-            return jsonify({"can_log": True}), 200
+            return jsonify({"can_log": True, "last_emotion": None}), 200
         
         last_log_time = last_log["timestamp"]
         current_time = datetime.datetime.now(datetime.timezone.utc)
@@ -238,10 +238,11 @@ def log_emotion():
             remaining_time = 1800 - time_since_last
             return jsonify({
                 "can_log": False,
+                "last_emotion": last_log["emotion"],
                 "remaining_time": math.ceil(remaining_time)
             }), 200
         
-        return jsonify({"can_log": True}), 200
+        return jsonify({"can_log": True, "last_emotion": last_log["emotion"]}), 200
     
     return jsonify({"error": "Method not allowed"}), 405
 

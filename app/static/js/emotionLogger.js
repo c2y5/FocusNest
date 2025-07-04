@@ -20,6 +20,12 @@ async function checkEmotionLogStatus() {
         
         if (response.ok) {
             if (!data.can_log && data.remaining_time) {
+                if (data.last_emotion) {
+                    const lastEmotionElement = document.querySelector(`.emotion-option[data-emotion="${data.last_emotion}"]`);
+                    if (lastEmotionElement) {
+                        updateSelectedEmotion(lastEmotionElement);
+                    }
+                }
                 startCooldown(data.remaining_time);
             }
         } else {
@@ -50,6 +56,12 @@ async function handleEmotionSelection() {
         
         if (!response.ok) {
             if (data.error === "cooldown" && data.remaining_time) {
+                if (data.last_emotion) {
+                    const lastEmotionElement = document.querySelector(`.emotion-option[data-emotion="${data.last_emotion}"]`);
+                    if (lastEmotionElement) {
+                        updateSelectedEmotion(this, lastEmotionElement);
+                    }
+                }
                 startCooldown(data.remaining_time);
                 throw new Error(`Please wait ${formatTime(data.remaining_time)}`);
             }
