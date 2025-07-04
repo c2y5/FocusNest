@@ -270,8 +270,9 @@ FocusNest/
 |   |   |   ├── timerBase.js
 |   |   |   └── timerSettings.js
 │   │   ├── music/
-│   │   └── sounds/
+│   │   ├── sounds/
 |   |   |   └── complete.mp3
+│   │   └── robots.txt
 │   ├── templates/
 │   ├── timer/
 │   │   ├── __init__.py

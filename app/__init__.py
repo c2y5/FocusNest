@@ -1,7 +1,8 @@
 # app/__init__.py
 # type: ignore
 
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
+import os
 from config import Config
 from flask_pymongo import PyMongo
 import certifi
@@ -118,5 +119,9 @@ def create_app():
                             error_code=503,
                             error_title="Service Unavailable",
                             error_message="The server is temporarily unavailable. Please try again later."), 503
+    
+    @app.route("/robots.txt")
+    def robots():
+        return send_from_directory(os.path.join(app.root_path, "static"), "robots.txt")
 
     return app
