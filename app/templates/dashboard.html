@@ -41,7 +41,12 @@
     <div class="card-row">
         <div class="tasks-card">
             <div class="tasks-header">
-                <h3>Tasks</h3>
+                <div class="tasks-stats">
+                    <h3>Tasks</h3>
+                    <div class="tasks-count">
+                        <span class="completed-count">0</span>/<span class="total-count">0</span>
+                    </div>
+                </div>
                 <button class="add-task-btn">+ Add Task</button>
             </div>
             <div class="tasks-list">
@@ -49,8 +54,8 @@
             <div class="task-input-container hidden">
                 <input type="text" class="task-input" placeholder="Enter task...">
                 <div class="task-input-actions">
-                <button class="save-task-btn">Save</button>
-                <button class="cancel-task-btn">Cancel</button>
+                    <button class="save-task-btn">Save</button>
+                    <button class="cancel-task-btn">Cancel</button>
                 </div>
             </div>
         </div>

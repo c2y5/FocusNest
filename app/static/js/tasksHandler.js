@@ -15,7 +15,9 @@ class TasksHandler {
       taskInputContainer: document.querySelector(".task-input-container"),
       taskInput: document.querySelector(".task-input"),
       saveTaskBtn: document.querySelector(".save-task-btn"),
-      cancelTaskBtn: document.querySelector(".cancel-task-btn")
+      cancelTaskBtn: document.querySelector(".cancel-task-btn"),
+      completedCount: document.querySelector(".completed-count"),
+      totalCount: document.querySelector(".total-count")
     };
   }
 
@@ -35,6 +37,14 @@ class TasksHandler {
     this.elements.taskInput.value = "";
     this.currentEditId = null;
     this.elements.taskInputContainer.classList.add("hidden");
+  }
+
+  updateTaskCounts() {
+    const totalTasks = this.tasks.length;
+    const completedTasks = this.tasks.filter(task => task.completed).length;
+    
+    this.elements.totalCount.textContent = totalTasks;
+    this.elements.completedCount.textContent = completedTasks;
   }
 
   async saveTask() {
@@ -72,6 +82,7 @@ class TasksHandler {
         throw new Error(data.error || "Failed to add task");
       }
       
+      this.updateTaskCounts();
       await this.loadTasks();
     } catch (error) {
       console.error("Error adding task:", error);
@@ -98,6 +109,7 @@ class TasksHandler {
         throw new Error(data.error || "Failed to update task");
       }
       
+      this.updateTaskCounts();
       await this.loadTasks();
     } catch (error) {
       console.error("Error updating task:", error);
@@ -127,7 +139,8 @@ class TasksHandler {
       if (!response.ok) {
         throw new Error(data.error || "Failed to update task");
       }
-      
+
+      this.updateTaskCounts();
       await this.loadTasks();
     } catch (error) {
       console.error("Error toggling task:", error);
@@ -155,6 +168,7 @@ class TasksHandler {
             throw new Error(data.error || "Failed to delete task");
         }
         
+        this.updateTaskCounts();
         await this.loadTasks();
     } catch (error) {
         console.error("Error deleting task:", error);
@@ -171,6 +185,7 @@ class TasksHandler {
       }
       
       this.tasks = data;
+      this.updateTaskCounts();
       this.renderTasks();
     } catch (error) {
       console.error("Error loading tasks:", error);
@@ -181,113 +196,141 @@ class TasksHandler {
     this.elements.tasksList.innerHTML = "";
 
     const sortedTasks = [...this.tasks].sort((a, b) => {
-      const aIndex = a.order_index !== undefined ? a.order_index : 0;
-      const bIndex = b.order_index !== undefined ? b.order_index : 0;
-      return aIndex - bIndex;
+        const aIndex = a.order_index !== undefined ? a.order_index : 0;
+        const bIndex = b.order_index !== undefined ? b.order_index : 0;
+        return aIndex - bIndex;
     });
 
     sortedTasks.forEach(task => {
-      const taskElement = document.createElement("div");
-      taskElement.className = "task-item";
-      taskElement.draggable = true;
-      taskElement.dataset.id = task._id;
+        const taskElement = document.createElement("div");
+        taskElement.className = "task-item";
+        taskElement.draggable = true;
+        taskElement.dataset.id = task._id;
 
-      taskElement.addEventListener("dragstart", (e) => {
-        this.draggedItem = taskElement;
-        taskElement.classList.add("dragging");
-
-        e.dataTransfer.setDragImage(taskElement, 0, 0);
-        e.dataTransfer.effectAllowed = "move";
-      });
-
-      taskElement.addEventListener("dragend", () => {
-        document.querySelectorAll('.task-item').forEach(el => {
-          el.classList.remove("drag-over-top", "drag-over-bottom");
+        // Drag and drop event listeners
+        taskElement.addEventListener("dragstart", (e) => {
+            this.draggedItem = taskElement;
+            taskElement.classList.add("dragging");
+            e.dataTransfer.setDragImage(taskElement, 0, 0);
+            e.dataTransfer.effectAllowed = "move";
         });
-        taskElement.classList.remove("dragging");
-        this.draggedItem = null;
-      });
 
-      taskElement.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        if (!this.draggedItem || taskElement === this.draggedItem) return;
+        taskElement.addEventListener("dragend", () => {
+            document.querySelectorAll('.task-item').forEach(el => {
+                el.classList.remove("drag-over-top", "drag-over-bottom");
+            });
+            taskElement.classList.remove("dragging");
+            this.draggedItem = null;
+        });
 
-        const rect = taskElement.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
+        taskElement.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            if (!this.draggedItem || taskElement === this.draggedItem) return;
 
-        taskElement.classList.remove("drag-over-top", "drag-over-bottom");
+            const rect = taskElement.getBoundingClientRect();
+            const midY = rect.top + rect.height / 2;
 
-        if (e.clientY < midY) {
-          taskElement.classList.add("drag-over-top");
-        } else {
-          taskElement.classList.add("drag-over-bottom");
-        }
-      });
+            taskElement.classList.remove("drag-over-top", "drag-over-bottom");
 
-      taskElement.addEventListener("dragleave", () => {
-        taskElement.classList.remove("drag-over-top", "drag-over-bottom");
-      });
+            if (e.clientY < midY) {
+                taskElement.classList.add("drag-over-top");
+            } else {
+                taskElement.classList.add("drag-over-bottom");
+            }
+        });
 
-      taskElement.addEventListener("drop", (e) => {
-        e.preventDefault();
-        if (!this.draggedItem || taskElement === this.draggedItem) return;
+        taskElement.addEventListener("dragleave", () => {
+            taskElement.classList.remove("drag-over-top", "drag-over-bottom");
+        });
 
-        const rect = taskElement.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
+        taskElement.addEventListener("drop", (e) => {
+            e.preventDefault();
+            if (!this.draggedItem || taskElement === this.draggedItem) return;
 
-        if (e.clientY < midY) {
-          this.elements.tasksList.insertBefore(this.draggedItem, taskElement);
-        } else {
-          this.elements.tasksList.insertBefore(
-            this.draggedItem,
-            taskElement.nextSibling
-          );
-        }
+            const rect = taskElement.getBoundingClientRect();
+            const midY = rect.top + rect.height / 2;
 
-        this.saveNewOrder();
+            if (e.clientY < midY) {
+                this.elements.tasksList.insertBefore(this.draggedItem, taskElement);
+            } else {
+                this.elements.tasksList.insertBefore(
+                    this.draggedItem,
+                    taskElement.nextSibling
+                );
+            }
 
-        taskElement.classList.remove("drag-over-top", "drag-over-bottom");
-      });
+            this.saveNewOrder();
+            taskElement.classList.remove("drag-over-top", "drag-over-bottom");
+        });
 
-      const checkbox = document.createElement('input');
-      checkbox.type = "checkbox";
-      checkbox.className = "task-checkbox";
-      checkbox.checked = task.completed;
+        const checkboxContainer = document.createElement("label");
+        checkboxContainer.className = "custom-checkbox";
 
-      const taskText = document.createElement("span");
-      taskText.className = `task-text ${task.completed ? "completed" : ""}`;
-      taskText.textContent = task.title;
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "task-checkbox";
+        checkbox.checked = task.completed;
 
-      const taskActions = document.createElement('div');
-      taskActions.className = "task-actions";
+        const checkboxVisual = document.createElement("span");
+        checkboxVisual.className = "checkbox-visual";
+        checkboxVisual.innerHTML = task.completed 
+            ? '<i class="fas fa-check-circle"></i>' 
+            : '<i class="far fa-circle"></i>';
 
-      const editBtn = document.createElement('button');
-      editBtn.className = "task-btn edit-btn";
-      editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+        const taskText = document.createElement("span");
+        taskText.className = `task-text ${task.completed ? "completed" : ""}`;
+        taskText.textContent = task.title;
 
-      const deleteBtn = document.createElement('button');
-      deleteBtn.className = "task-btn delete-btn";
-      deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        const textWrapper = document.createElement("span");
+        textWrapper.className = "text-wrapper";
+        textWrapper.appendChild(taskText);
 
-      taskActions.appendChild(editBtn);
-      taskActions.appendChild(deleteBtn);
-      taskElement.appendChild(checkbox);
-      taskElement.appendChild(taskText);
-      taskElement.appendChild(taskActions);
 
-      checkbox.addEventListener("change", () => this.toggleTaskComplete(task._id, task.completed));
-      editBtn.addEventListener("click", () => {
-        this.currentEditId = task._id;
-        this.showTaskInput(task.title);
-      });
+        const taskActions = document.createElement('div');
+        taskActions.className = "task-actions";
 
-      deleteBtn.addEventListener("click", async (e) => {
-        e.stopPropagation();
-        await this.deleteTask(task._id);
-      });
+        const editBtn = document.createElement('button');
+        editBtn.className = "task-btn edit-btn";
+        editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+        editBtn.title = "Edit task";
 
-      this.elements.tasksList.appendChild(taskElement);
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = "task-btn delete-btn";
+        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        deleteBtn.title = "Delete task";
+
+        taskActions.appendChild(editBtn);
+        taskActions.appendChild(deleteBtn);
+
+        checkbox.addEventListener("change", (e) => {
+            this.toggleTaskComplete(task._id, task.completed);
+            checkboxVisual.innerHTML = e.target.checked 
+                ? '<i class="fas fa-check-circle"></i>' 
+                : '<i class="far fa-circle"></i>';
+            taskText.classList.toggle("completed", e.target.checked);
+        });
+
+        editBtn.addEventListener("click", () => {
+            this.currentEditId = task._id;
+            this.showTaskInput(task.title);
+        });
+
+        deleteBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            await this.deleteTask(task._id);
+        });
+
+        taskElement.appendChild(checkboxContainer);
+        taskElement.appendChild(taskText);
+        taskElement.appendChild(taskActions);
+
+        checkboxContainer.appendChild(checkbox);
+        checkboxContainer.appendChild(checkboxVisual);
+
+        this.elements.tasksList.appendChild(taskElement);
     });
+
+    this.updateTaskCounts();
   }
 
 
@@ -312,6 +355,7 @@ class TasksHandler {
         throw new Error(data.error || "Failed to update task order");
       }
       
+      this.updateTaskCounts();
       await this.loadTasks();
     } catch (error) {
       console.error("Error updating task order:", error);
