@@ -26,8 +26,6 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    logger = setup_logging()
-
     if not verify_config(app):
         raise ValueError("Configuration verification failed. Please check your environment variables.")
     
