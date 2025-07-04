@@ -35,7 +35,6 @@ async function checkEmotionLogStatus() {
 async function handleEmotionSelection() {
     const emotion = this.getAttribute("data-emotion");
     
-    updateSelectedEmotion(this, emotion);
     document.querySelector(".emotion-instruction").textContent = "Logging mood...";
     
     try {
@@ -56,7 +55,8 @@ async function handleEmotionSelection() {
             }
             throw new Error(data.error || "Failed to log mood");
         }
-        
+
+        updateSelectedEmotion(this, emotion);
         document.querySelector(".emotion-instruction").textContent = `Logged: ${formatEmotionText(emotion)}`;
         startCooldown(1800);
         
