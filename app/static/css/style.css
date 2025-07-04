@@ -1887,3 +1887,28 @@ p {
 .guest-mode-btn:hover .btn-icon {
   transform: translateY(-2px);
 }
+
+.task-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.task-btn:hover {
+  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.delete-btn.confirm-delete {
+  color: var(--accent) !important;
+  animation: pulse 0.5s infinite;
+}
+
+.edit-btn:hover {
+  color: var(--primary-light);
+}

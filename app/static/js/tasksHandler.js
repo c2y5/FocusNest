@@ -3,6 +3,8 @@ class TasksHandler {
     this.tasks = [];
     this.triggeredStreak = false;
     this.currentEditId = null;
+    this.pendingDeleteId = null;
+    this.deleteTimeout = null;
     this.initElements();
     this.initEventListeners();
     this.loadTasks();
@@ -155,6 +157,12 @@ class TasksHandler {
       await this.loadTasks();
     } catch (error) {
       console.error("Error deleting task:", error);
+    } finally {
+      this.pendingDeleteId = null;
+      if (this.deleteTimeout) {
+        clearTimeout(this.deleteTimeout);
+        this.deleteTimeout = null;
+      }
     }
   }
 
@@ -172,6 +180,32 @@ class TasksHandler {
     } catch (error) {
       console.error("Error loading tasks:", error);
     }
+  }
+
+  handleDeleteClick(id, deleteBtn) {
+    if (this.pendingDeleteId && this.pendingDeleteId !== id) {
+      this.resetPendingDelete();
+    }
+
+    if (!this.pendingDeleteId) {
+      this.pendingDeleteId = id;
+      deleteBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+      deleteBtn.classList.add('confirm-delete');
+      this.deleteTimeout = setTimeout(() => {
+        this.resetPendingDelete();
+      }, 3000);
+    } else if (this.pendingDeleteId === id) {
+      this.deleteTask(id);
+    }
+  }
+
+  resetPendingDelete() {
+    this.pendingDeleteId = null;
+    if (this.deleteTimeout) {
+      clearTimeout(this.deleteTimeout);
+      this.deleteTimeout = null;
+    }
+    this.renderTasks();
   }
 
   renderTasks() {
@@ -195,11 +229,21 @@ class TasksHandler {
       
       const editBtn = document.createElement('button');
       editBtn.className = "task-btn edit-btn";
-      editBtn.textContent = "✏️";
+      editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
       
       const deleteBtn = document.createElement('button');
       deleteBtn.className = "task-btn delete-btn";
-      deleteBtn.textContent = "🗑️";
+      deleteBtn.innerHTML = (this.pendingDeleteId === task._id) 
+        ? '<i class="fas fa-exclamation-circle"></i>' 
+        : '<i class="fas fa-trash-alt"></i>';
+      
+      if (this.pendingDeleteId === task._id) {
+        deleteBtn.classList.add("confirm-delete");
+      }
+      
+      if (this.pendingDeleteId === task._id) {
+        deleteBtn.style.color = "var(--accent)";
+      }
       
       taskActions.appendChild(editBtn);
       taskActions.appendChild(deleteBtn);
@@ -209,10 +253,17 @@ class TasksHandler {
       
       checkbox.addEventListener("change", () => this.toggleTaskComplete(task._id, task.completed));
       editBtn.addEventListener("click", () => {
+        if (this.pendingDeleteId) {
+          this.resetPendingDelete();
+        }
         this.currentEditId = task._id;
         this.showTaskInput(task.title);
       });
-      deleteBtn.addEventListener("click", () => this.deleteTask(task._id));
+      
+      deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.handleDeleteClick(task._id, deleteBtn);
+      });
 
       this.elements.tasksList.appendChild(taskElement);
     });
