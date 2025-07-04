@@ -207,6 +207,8 @@ document.addEventListener("DOMContentLoaded", function() {
             
             this.isRunning = true;
             this.startBtn.textContent = "Pause";
+
+            this.syncTimerSession();
             
             this.timerInterval = setInterval(() => {
                 this.timeLeft--;
@@ -221,6 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         pauseTimer() {
             this.isRunning = false;
+            this.syncTimerSession(true);
             this.startBtn.textContent = "Start";
             clearInterval(this.timerInterval);
         }
@@ -230,11 +233,12 @@ document.addEventListener("DOMContentLoaded", function() {
             this.timeLeft = this.getCurrentDuration() * 60;
             this.updateDisplay();
             this.startBtn.textContent = "Start";
+            this.syncTimerSession(true);
         }
 
         async timerComplete() {
             this.isRunning = false;
-            
+            this.syncTimerSession(true);
             await this.playCompletionSound();
             
             if (this.currentMode === "work") {
@@ -279,6 +283,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     this.startTimer();
                 }
             }
+
+            this.syncTimerSession();
             
             this.showNotification(
                 `Time for a ${shouldTakeLongBreak ? "long" : "short"} break!`,
