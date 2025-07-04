@@ -179,43 +179,108 @@ class TasksHandler {
 
   renderTasks() {
     this.elements.tasksList.innerHTML = "";
-    
-    this.tasks.forEach(task => {
+
+    const sortedTasks = [...this.tasks].sort((a, b) => {
+      const aIndex = a.order_index !== undefined ? a.order_index : 0;
+      const bIndex = b.order_index !== undefined ? b.order_index : 0;
+      return aIndex - bIndex;
+    });
+
+    sortedTasks.forEach(task => {
       const taskElement = document.createElement("div");
       taskElement.className = "task-item";
-      
+      taskElement.draggable = true;
+      taskElement.dataset.id = task._id;
+
+      taskElement.addEventListener("dragstart", (e) => {
+        this.draggedItem = taskElement;
+        taskElement.classList.add("dragging");
+
+        e.dataTransfer.setDragImage(taskElement, 0, 0);
+        e.dataTransfer.effectAllowed = "move";
+      });
+
+      taskElement.addEventListener("dragend", () => {
+        document.querySelectorAll('.task-item').forEach(el => {
+          el.classList.remove("drag-over-top", "drag-over-bottom");
+        });
+        taskElement.classList.remove("dragging");
+        this.draggedItem = null;
+      });
+
+      taskElement.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        if (!this.draggedItem || taskElement === this.draggedItem) return;
+
+        const rect = taskElement.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+
+        taskElement.classList.remove("drag-over-top", "drag-over-bottom");
+
+        if (e.clientY < midY) {
+          taskElement.classList.add("drag-over-top");
+        } else {
+          taskElement.classList.add("drag-over-bottom");
+        }
+      });
+
+      taskElement.addEventListener("dragleave", () => {
+        taskElement.classList.remove("drag-over-top", "drag-over-bottom");
+      });
+
+      taskElement.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (!this.draggedItem || taskElement === this.draggedItem) return;
+
+        const rect = taskElement.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+
+        if (e.clientY < midY) {
+          this.elements.tasksList.insertBefore(this.draggedItem, taskElement);
+        } else {
+          this.elements.tasksList.insertBefore(
+            this.draggedItem,
+            taskElement.nextSibling
+          );
+        }
+
+        this.saveNewOrder();
+
+        taskElement.classList.remove("drag-over-top", "drag-over-bottom");
+      });
+
       const checkbox = document.createElement('input');
       checkbox.type = "checkbox";
       checkbox.className = "task-checkbox";
       checkbox.checked = task.completed;
-      
+
       const taskText = document.createElement("span");
       taskText.className = `task-text ${task.completed ? "completed" : ""}`;
       taskText.textContent = task.title;
-      
+
       const taskActions = document.createElement('div');
       taskActions.className = "task-actions";
-      
+
       const editBtn = document.createElement('button');
       editBtn.className = "task-btn edit-btn";
       editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-      
+
       const deleteBtn = document.createElement('button');
       deleteBtn.className = "task-btn delete-btn";
       deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-      
+
       taskActions.appendChild(editBtn);
       taskActions.appendChild(deleteBtn);
       taskElement.appendChild(checkbox);
       taskElement.appendChild(taskText);
       taskElement.appendChild(taskActions);
-      
+
       checkbox.addEventListener("change", () => this.toggleTaskComplete(task._id, task.completed));
       editBtn.addEventListener("click", () => {
         this.currentEditId = task._id;
         this.showTaskInput(task.title);
       });
-      
+
       deleteBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
         await this.deleteTask(task._id);
@@ -223,6 +288,34 @@ class TasksHandler {
 
       this.elements.tasksList.appendChild(taskElement);
     });
+  }
+
+
+  async saveNewOrder() {
+    const taskElements = Array.from(this.elements.tasksList.children);
+    const taskIds = taskElements.map(el => el.dataset.id);
+    
+    try {
+      const response = await fetch("/api/tasks/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          task_ids: taskIds
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update task order");
+      }
+      
+      await this.loadTasks();
+    } catch (error) {
+      console.error("Error updating task order:", error);
+    }
   }
 }
 

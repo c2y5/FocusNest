@@ -41,7 +41,10 @@ def tasks():
         return jsonify({"error": "Unauthorized"}), 401
     
     if request.method == "GET":
-        tasks = list(mongo.db.tasks.find({"user_id": session["user"]["id"]}))
+        # Get tasks sorted by order_index
+        tasks = list(mongo.db.tasks.find(
+            {"user_id": session["user"]["id"]}
+        ).sort("order_index", 1))  # 1 for ascending order
 
         for task in tasks:
             task["_id"] = str(task["_id"])
@@ -55,9 +58,21 @@ def tasks():
         if "title" not in data or not data["title"]:
             return jsonify({"error": "Title is required"}), 400
         
+        # Get the current highest order_index and increment by 1
+        last_task = mongo.db.tasks.find_one(
+            {"user_id": session["user"]["id"]},
+            sort=[("order_index", -1)]  # Get the task with highest order_index
+        )
+        
+        # Set order_index to 0 if no tasks exist, otherwise increment
+        data["order_index"] = 0 if not last_task else last_task["order_index"] + 1
+        
         result = mongo.db.tasks.insert_one(data)
 
-        return jsonify({"_id": str(result.inserted_id)}), 200
+        return jsonify({
+            "_id": str(result.inserted_id),
+            "order_index": data["order_index"]
+        }), 200
     elif request.method == "DELETE":
         task_id = request.json.get("task_id")
 
@@ -424,3 +439,35 @@ def timer_session():
         return "", 200
     
     return jsonify({"error": "Method not allowed"}), 405
+
+@api_bp.route("tasks/order", methods=["POST"])
+def change_tasks_order():
+    if not session.get("user"):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    data = request.json
+    task_ids = data.get("task_ids", [])
+
+    if not task_ids or not isinstance(task_ids, list):
+        return jsonify({"error": "Invalid task IDs"}), 400
+    
+    try:
+        obj_ids = [ObjectId(task_id) for task_id in task_ids]
+    except Exception as e:
+        return jsonify({"error": f"Invalid ObjectId: {e}"}), 400
+    
+    tasks = list(mongo.db.tasks.find({
+        "_id": {"$in": obj_ids}, 
+        "user_id": session["user"]["id"]
+    }))
+    
+    if len(tasks) != len(obj_ids):
+        return jsonify({"error": "Some tasks not found"}), 404
+    
+    for i, task_id in enumerate(obj_ids):
+        mongo.db.tasks.update_one(
+            {"_id": task_id, "user_id": session["user"]["id"]},
+            {"$set": {"order_index": i}}
+        )
+    
+    return jsonify({"status": "success"}), 200
