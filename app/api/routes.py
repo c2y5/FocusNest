@@ -394,3 +394,32 @@ def upload_avatar():
         }), 200
     
     return jsonify({"error": "Invalid file type"}), 400
+
+@api_bp.route("timer_session", methods=["GET", "POST"])
+def timer_session():
+    if not session.get("user"):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    if not session.get("timer_session"):
+        return jsonify({"error": "No timer session found"}), 404
+
+    if request.method == "GET":
+        return jsonify(session["timer_session"]), 200
+    elif request.method == "POST":
+        if not request.json:
+            return jsonify({"error": "Invalid request"}), 400
+        
+        data = request.json
+
+        session["timer_session"] = {
+            "current_state": data.get("current_state"),
+            "work_time": data.get("work_time"),
+            "short_break_time": data.get("short_break_time"),
+            "long_break_time": data.get("long_break_time"),
+            "current_phase": data.get("current_phase"),
+            "is_running": data.get("is_running")
+        }
+
+        return "", 200
+    
+    return jsonify({"error": "Method not allowed"}), 405

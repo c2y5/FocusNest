@@ -39,9 +39,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         async initTimer() {
             await this.loadSettings();
+            await this.loadTimerSession();
             this.setupEventListeners();
-            this.resetTimer();
-            this.setActiveMode("work");
+            this.setupSyncInterval();
             
             try {
                 await this.completionSound.play().then(() => {
@@ -50,6 +50,93 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             } catch (e) {
                 console.log("Audio preloading failed:", e);
+            }
+        }
+
+        async loadTimerSession() {
+            try {
+                const response = await fetch("/api/timer_session");
+
+                if (!response.ok) throw new Error("Failed to load timer session");
+
+                const data = await response.json();
+                if (data.error) {
+                    console.log("No existing timer session");
+                    this.resetTimer();
+                    this.setActiveMode("work");
+                    return;
+                }
+
+                if (data.current_state === "work") {
+                    this.timeLeft = data.work_time || this.settings.workDuration * 60;
+                }
+
+                this.pomodoroCount = data.current_phase || 0;
+                this.updatePomodoroCount();
+
+                if (this.pomodoroCount % this.settings.longBreakInterval === 0 && this.pomodoroCount > 0) {
+                    this.currentMode = "longBreak";
+                    this.timeLeft = data.long_break_time || this.settings.longBreakDuration * 60;
+                } else if (data.current_state !== "work") {
+                    this.currentMode = "shortBreak";
+                    this.timeLeft = data.short_break_time || this.settings.shortBreakDuration * 60;
+                } else {
+                    this.currentMode = "work";
+                }
+
+                this.setActiveMode(this.currentMode);
+
+                if (data.is_running !== undefined) {
+                    this.isRunning = data.is_running;
+                    if (this.isRunning) {
+                        this.startBtn.textContent = "Pause";
+                        this.startTimer();
+                    }
+                }
+                
+                this.updateDisplay();
+                console.log("Loaded timer session:", data)
+            } catch (error) {
+                console.error("Error loading timer session:", error);
+                this.resetTimer();
+                this.setActiveMode("work");
+            }
+        }
+
+        setupSyncInterval() {
+            if (this.syncInterval) {
+                clearInterval(this.syncInterval);
+            }
+            
+            this.syncInterval = setInterval(() => {
+                this.syncTimerSession();
+            }, 1000);
+        }
+
+        async syncTimerSession(f = false) {
+            if (!f && !this.isRunning) {
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/timer_session", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        current_state: this.currentMode,
+                        current_phase: this.pomodoroCount,
+                        is_running: this.isRunning,
+                        work_time: this.currentMode === "work" ? this.timeLeft : this.settings.workDuration * 60,
+                        short_break_time: this.currentMode === "shortBreak" ? this.timeLeft : this.settings.shortBreakDuration * 60,
+                        long_break_time: this.currentMode === "longBreak" ? this.timeLeft : this.settings.longBreakDuration * 60
+                    })
+                });
+
+                if (!response.ok) throw new Error("Failed to sync timer session");
+            } catch (error) {
+                console.error("Error syncing timer session:", error);
             }
         }
 
