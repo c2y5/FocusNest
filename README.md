@@ -170,7 +170,7 @@
 - ```mongodb+srv://mongodb:<db_password>@<CLUSTERNAME>.<CLUSTERID>.mongodb.net/?retryWrites=true&w=majority&appName=<CLUSTERNAME>```
 
 - In your ``.env`` update ``MONGO_URI`` to the above, make sure to put in your ``db_password``
-- For me I added a ``/focusnest`` after the url: ``.net@cluster0.<id>>.mongodb.net/focusnest?``
+- For me I added a ``/focusnest`` after the url: ``@cluster0.<id>.mongodb.net/focusnest?``
 - You don't have to but I keep it like that for better view
 
 ## Setup AI configs
