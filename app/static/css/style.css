@@ -53,6 +53,13 @@ body {
   scrollbar-width: none;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
 h1,
 h2,
 h3 {
@@ -469,10 +476,6 @@ p {
 }
 
 @media (max-width: 768px) {
-  * {
-    overflow-x: hidden;
-  }
-
   .header-content {
     height: 60px;
     padding: 0 1rem;
@@ -1111,17 +1114,19 @@ p {
 }
 
 .task-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-bottom: 0.5rem;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .task-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .task-checkbox {
@@ -1206,113 +1211,113 @@ p {
 }
 
 .custom-checkbox {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-right: 0.75rem;
-    width: 1.2rem;
-    height: 1.2rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 0.75rem;
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .task-checkbox {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    z-index: 1;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  z-index: 1;
 }
 
 .checkbox-visual {
-    position: absolute;
-    font-size: 1.2rem;
-    color: var(--text-muted);
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .task-checkbox:checked ~ .checkbox-visual {
-    color: var(--green-accent);
+  color: var(--green-accent);
 }
 
 .task-checkbox:checked ~ .checkbox-visual i.fa-circle {
-    display: none;
+  display: none;
 }
 
 .task-checkbox:not(:checked) ~ .checkbox-visual i.fa-check-circle {
-    display: none;
+  display: none;
 }
 
 .task-actions {
-    display: flex;
-    gap: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .task-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-    padding: 0.3rem;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.8rem;
-    height: 1.8rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  padding: 0.3rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
 }
 
 .task-btn:hover {
-    color: var(--text-light);
-    background: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .edit-btn:hover {
-    color: var(--primary-light);
+  color: var(--primary-light);
 }
 
 .delete-btn:hover {
-    color: var(--accent);
+  color: var(--accent);
 }
 
 .delete-btn.confirm-delete {
-    color: var(--accent) !important;
-    animation: pulse 0.5s infinite;
+  color: var(--accent) !important;
+  animation: pulse 0.5s infinite;
 }
 
 .task-item.dragging {
-    opacity: 0.5;
-    transform: scale(0.98);
-    background: rgba(255, 255, 255, 0.05);
+  opacity: 0.5;
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .task-item.drag-over-top::before {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--green-accent);
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--green-accent);
 }
 
 .task-item.drag-over-bottom::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--green-accent);
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--green-accent);
 }
 
 @media (max-width: 768px) {
