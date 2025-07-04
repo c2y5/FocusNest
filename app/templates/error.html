@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusNest - 404</title>
+    <title>FocusNest - {{ error_code }}</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="icon" href="/static/img/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,9 +13,9 @@
         <main class="content">
             <div class="error-container">
                 <div class="error-content">
-                    <h1 class="error-code gradient-text">404</h1>
-                    <h2 class="error-title">Page Not Found</h2>
-                    <p class="error-message">The page you're looking for doesn't exist or has been moved.</p>
+                    <h1 class="error-code gradient-text">{{ error_code }}</h1>
+                    <h2 class="error-title">{{ error_title }}</h2>
+                    <p class="error-message">{{ error_message }}</p>
                     <div class="error-actions">
                     <a href="/" class="cta-primary">
                         <span>Return Home</span>

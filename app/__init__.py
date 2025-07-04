@@ -64,6 +64,58 @@ def create_app():
     
     @app.errorhandler(404)
     def page_not_found(e):
-        return render_template("404.html"), 404
+        return render_template("error.html",
+                               error_code = 404,
+                               error_title = "Page Not Found",
+                               error_message = "The page you're looking for doesn't exist or has been moved."), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template("error.html",
+                            error_code=500,
+                            error_title="Internal Server Error",
+                            error_message="Something went wrong on our side. Please try again later."), 500
+
+    @app.errorhandler(403)
+    def forbidden(e):
+        return render_template("error.html",
+                            error_code=403,
+                            error_title="Forbidden",
+                            error_message="You do not have permission to access this resource."), 403
+
+    @app.errorhandler(401)
+    def unauthorized(e):
+        return render_template("error.html",
+                            error_code=401,
+                            error_title="Unauthorized",
+                            error_message="You need to log in to access this page."), 401
+
+    @app.errorhandler(400)
+    def bad_request(e):
+        return render_template("error.html",
+                            error_code=400,
+                            error_title="Bad Request",
+                            error_message="The server could not understand your request. Please check the input."), 400
+
+    @app.errorhandler(408)
+    def request_timeout(e):
+        return render_template("error.html",
+                            error_code=408,
+                            error_title="Request Timeout",
+                            error_message="The request took too long to process. Please try again."), 408
+
+    @app.errorhandler(429)
+    def too_many_requests(e):
+        return render_template("error.html",
+                            error_code=429,
+                            error_title="Too Many Requests",
+                            error_message="You have made too many requests. Please try again later."), 429
+
+    @app.errorhandler(503)
+    def service_unavailable(e):
+        return render_template("error.html",
+                            error_code=503,
+                            error_title="Service Unavailable",
+                            error_message="The server is temporarily unavailable. Please try again later."), 503
 
     return app
