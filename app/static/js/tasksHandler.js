@@ -3,8 +3,6 @@ class TasksHandler {
     this.tasks = [];
     this.triggeredStreak = false;
     this.currentEditId = null;
-    this.pendingDeleteId = null;
-    this.deleteTimeout = null;
     this.initElements();
     this.initEventListeners();
     this.loadTasks();
@@ -137,32 +135,29 @@ class TasksHandler {
   }
 
   async deleteTask(id) {
+    const confirmed = await window.showConfirmation("Are you sure you want to delete this task?");
+    if (!confirmed) return;
+
     try {
-      const response = await fetch("/api/tasks", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          task_id: id
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to delete task");
-      }
-      
-      await this.loadTasks();
+        const response = await fetch("/api/tasks", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                task_id: id
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to delete task");
+        }
+        
+        await this.loadTasks();
     } catch (error) {
-      console.error("Error deleting task:", error);
-    } finally {
-      this.pendingDeleteId = null;
-      if (this.deleteTimeout) {
-        clearTimeout(this.deleteTimeout);
-        this.deleteTimeout = null;
-      }
+        console.error("Error deleting task:", error);
     }
   }
 
@@ -180,32 +175,6 @@ class TasksHandler {
     } catch (error) {
       console.error("Error loading tasks:", error);
     }
-  }
-
-  handleDeleteClick(id, deleteBtn) {
-    if (this.pendingDeleteId && this.pendingDeleteId !== id) {
-      this.resetPendingDelete();
-    }
-
-    if (!this.pendingDeleteId) {
-      this.pendingDeleteId = id;
-      deleteBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-      deleteBtn.classList.add('confirm-delete');
-      this.deleteTimeout = setTimeout(() => {
-        this.resetPendingDelete();
-      }, 3000);
-    } else if (this.pendingDeleteId === id) {
-      this.deleteTask(id);
-    }
-  }
-
-  resetPendingDelete() {
-    this.pendingDeleteId = null;
-    if (this.deleteTimeout) {
-      clearTimeout(this.deleteTimeout);
-      this.deleteTimeout = null;
-    }
-    this.renderTasks();
   }
 
   renderTasks() {
@@ -233,17 +202,7 @@ class TasksHandler {
       
       const deleteBtn = document.createElement('button');
       deleteBtn.className = "task-btn delete-btn";
-      deleteBtn.innerHTML = (this.pendingDeleteId === task._id) 
-        ? '<i class="fas fa-exclamation-circle"></i>' 
-        : '<i class="fas fa-trash-alt"></i>';
-      
-      if (this.pendingDeleteId === task._id) {
-        deleteBtn.classList.add("confirm-delete");
-      }
-      
-      if (this.pendingDeleteId === task._id) {
-        deleteBtn.style.color = "var(--accent)";
-      }
+      deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
       
       taskActions.appendChild(editBtn);
       taskActions.appendChild(deleteBtn);
@@ -253,22 +212,20 @@ class TasksHandler {
       
       checkbox.addEventListener("change", () => this.toggleTaskComplete(task._id, task.completed));
       editBtn.addEventListener("click", () => {
-        if (this.pendingDeleteId) {
-          this.resetPendingDelete();
-        }
         this.currentEditId = task._id;
         this.showTaskInput(task.title);
       });
       
-      deleteBtn.addEventListener("click", (e) => {
+      deleteBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
-        this.handleDeleteClick(task._id, deleteBtn);
+        await this.deleteTask(task._id);
       });
 
       this.elements.tasksList.appendChild(taskElement);
     });
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const tasksHandler = new TasksHandler();

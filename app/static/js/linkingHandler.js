@@ -20,6 +20,13 @@ function initLinkingButtons() {
 }
 
 function handleLinkClick(provider) {
+    const providerToName = {
+        "google-oauth2": "Google",
+        "github": "GitHub",
+        "spotify": "Spotify",
+        "sign-in-with-slack": "Slack"
+    };
+
     fetch(`/is_linked/${provider}`)
         .then(response => response.json())
         .then(data => {
@@ -29,21 +36,24 @@ function handleLinkClick(provider) {
             }
 
             if (data.is_linked) {
-                if (confirm(`Unlink ${provider}?`)) {
-                    fetch(`/unlink/${provider}`, { method: "POST" })
-                        .then(res => res.json())
-                        .then(result => {
-                            if (result.error) {
-                                showLinkingError(result.error);
-                            } else {
-                                checkLinkStatus();
-                            }
-                        })
-                        .catch(err => {
-                            console.error("Error unlinking:", err);
-                            showLinkingError("Failed to unlink provider");
-                        });
-                }
+                window.showConfirmation(`Are you sure you want to unlink your ${providerToName[provider]} account?`)
+                    .then(confirmed => {
+                        if (confirmed) {
+                            return fetch(`/unlink/${provider}`, { method: "POST" })
+                                .then(res => res.json())
+                                .then(result => {
+                                    if (result.error) {
+                                        showLinkingError(result.error);
+                                    } else {
+                                        checkLinkStatus();
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error("Error unlinking:", err);
+                                    showLinkingError("Failed to unlink provider");
+                                });
+                        }
+                    });
             } else {
                 window.location.href = `/link/${provider}`;
             }

@@ -243,6 +243,7 @@ FocusNest/
 │   │   │   ├── flashcardsPage.css
 │   │   │   ├── hamburgerMenu.css
 │   │   │   ├── musicPage.css
+│   │   │   ├── popup.css
 │   │   │   ├── settingsPage.css
 │   │   │   └── style.css.css
 │   │   ├── img/
@@ -261,6 +262,7 @@ FocusNest/
 |   |   |   ├── liveCounter.js
 |   |   |   ├── musicHandler.js
 |   |   |   ├── pomodoroTimer.js
+|   |   |   ├── popupHandler.js
 |   |   |   ├── quote.js
 |   |   |   ├── settingsHandler.js
 |   |   |   ├── streakHandler.js
