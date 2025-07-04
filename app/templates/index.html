@@ -9,20 +9,34 @@
                 <h1>Focus<span class="gradient-text">Nest</span></h1>
             </div>
             <p class="tagline">Your personal productivity management</p>
-            <div class="cta-buttons">
-                <a href="/dashboard" class="cta-primary">
-                    <i class="fas fa-arrow-right btn-icon"></i> Start Focusing
-                </a>
-                <a href="/guest_mode" class="guest-mode-btn">
-                    <i class="fas fa-user btn-icon"></i> Guest Mode
-                </a>
-                <a href="#features" class="cta-secondary">
-                    <i class="fas fa-rocket btn-icon"></i> Features
-                </a>
+            <div class="cta-buttons-wrapper">
+                <div class="cta-buttons-row">
+                    <a href="/dashboard" class="cta-primary">
+                        <i class="fas fa-arrow-right btn-icon"></i> Start Focusing
+                    </a>
+                    <a href="#features" class="cta-secondary">
+                        <i class="fas fa-rocket btn-icon"></i> Features
+                    </a>
+                    
+                    <div class="guest-mode-container">
+                        <a href="/guest_mode" class="guest-mode-btn">
+                            <i class="fas fa-user btn-icon"></i> Guest Mode
+                        </a>
+                        <div class="guest-mode-indicator">
+                            <div class="arrow-container">
+                                <i class="fas fa-arrow-up arrow-1"></i>
+                                <i class="fas fa-arrow-up arrow-2"></i>
+                                <i class="fas fa-arrow-up arrow-3"></i>
+                            </div>
+                            <div class="arrow-label">Try without an account</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="corner-gradient top-right"></div>
     </section>
+
     <div class="corner-gradient bottom-left"></div>
     <section id="features" class="features">
         <h2>Why <span class="gradient-text">FocusNest?</span></h2>
@@ -45,16 +59,16 @@
         </div>
     </section>
     <section class="demo">
-    <div class="corner-gradient bottom-right"></div>
-    <div class="demo-content">
-        <h2>Your <span class="gradient-text">Productivity</span> Powerhouse</h2>
-        <div class="mockup">
-            <img src="/static/img/dashboard-preview.jpg" 
-                alt="Dashboard preview" 
-                class="mockup-image">
+        <div class="corner-gradient bottom-right"></div>
+        <div class="demo-content">
+            <h2>Your <span class="gradient-text">Productivity</span> Powerhouse</h2>
+            <div class="mockup">
+                <img src="/static/img/dashboard-preview.jpg" 
+                    alt="Dashboard preview" 
+                    class="mockup-image">
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 </div>
 
 <script src="/static/js/cardHover.js"></script>

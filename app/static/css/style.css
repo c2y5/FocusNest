@@ -2162,3 +2162,143 @@ p {
     justify-content: space-between;
   }
 }
+
+.cta-buttons-wrapper {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.cta-buttons-row {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  justify-content: flex-start;
+}
+
+.cta-primary,
+.cta-secondary,
+.guest-mode-btn {
+  min-width: 160px;
+  max-width: 160px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  margin: 0;
+}
+
+.guest-mode-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.guest-mode-indicator {
+  position: absolute;
+  top: 100%;
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.arrow-label {
+  color: var(--teal);
+  font-weight: 500;
+  background: rgba(78, 205, 196, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  white-space: nowrap;
+}
+
+.arrow-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.guest-mode-indicator .fa-arrow-up {
+  color: var(--teal);
+  font-size: 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.arrow-1 {
+  animation: float-up 2s infinite;
+}
+
+.arrow-2 {
+  animation: float-up 2s infinite 0.3s;
+}
+
+.arrow-3 {
+  animation: float-up 2s infinite 0.6s;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+
+.guest-mode-btn {
+  background: rgba(78, 205, 196, 0.1) !important;
+  border: 1px solid var(--teal) !important;
+  color: var(--teal) !important;
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(78, 205, 196, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(78, 205, 196, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(78, 205, 196, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .cta-buttons-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    max-width: 100%;
+  }
+
+  .cta-primary,
+  .cta-secondary,
+  .guest-mode-btn {
+    min-width: 220px;
+    max-width: 220px;
+  }
+
+  .guest-mode-indicator {
+    position: relative;
+    margin-top: 0.5rem;
+  }
+
+  .arrow-label {
+    font-size: 0.8rem;
+  }
+
+  .arrow-container {
+    gap: 0.3rem;
+  }
+}
