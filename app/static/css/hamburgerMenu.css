@@ -139,9 +139,7 @@
   .menu-text {
     display: none;
   }
-}
 
-@media (min-width: 769px) {
   .mobile-nav {
     width: 320px;
   }

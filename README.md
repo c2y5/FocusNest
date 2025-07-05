@@ -109,6 +109,8 @@
 
     AI_API_URL=https://ai.example.com/chat/completions
     AI_API_KEY=your_api_key_here
+
+    GUEST_MODE_CUSTOMIZABLE=False # True/False
     ```
 
 ---
@@ -207,6 +209,7 @@
 - To update the max file upload size change the value in ``config.py`` in ``lin 10``
 - Update ``MAX_CONTENT_LENGTH`` to the size you want
 - e.g. ``5 * 1024 * 1024`` for 5MB or ``10 * 1024 * 1024`` for 10MB
+- To allow guests to access settings change ``GUEST_MODE_CUSTOMIZABLE`` in ``.env`` to ``True``
 
 ---
 
@@ -274,6 +277,16 @@ FocusNest/
 |   |   |   └── complete.mp3
 │   │   └── robots.txt
 │   ├── templates/
+│   │   ├── base.html
+│   │   ├── dashboard.html
+│   │   ├── error.html
+│   │   ├── flashcards.html
+│   │   ├── index.html
+│   │   ├── music.html
+│   │   ├── settings.html
+│   │   ├── settingsGuest.html
+│   │   ├── settingsLocked.html
+│   │   └── timer.html
 │   ├── timer/
 │   │   ├── __init__.py
 │   │   └── routes.py

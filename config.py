@@ -21,3 +21,5 @@ class Config:
 
     AI_API_URL = os.getenv("AI_API_URL")
     AI_API_KEY = os.getenv("AI_API_KEY", "your_api_key_here")
+
+    GUEST_MODE_CUSTOMIZABLE = os.getenv("GUEST_MODE_CUSTOMIZABLE", "false").lower() == "true"

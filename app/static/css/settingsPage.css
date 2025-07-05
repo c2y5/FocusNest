@@ -421,89 +421,6 @@ input:checked + .toggle-slider:before {
   }
 }
 
-@media (max-width: 768px) {
-  .settings-page {
-    padding: 0 1rem;
-    margin: 1.5rem auto;
-  }
-
-  .settings-content {
-    padding: 1.75rem;
-  }
-
-  .setting-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.5rem 1rem;
-  }
-
-  .setting-input,
-  .setting-input-group {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .toggle-item {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .section-title-container {
-    margin-bottom: 1.75rem;
-  }
-
-  .settings-footer {
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 2rem;
-  }
-
-  .input-unit {
-    min-width: 78px;
-  }
-
-  .save-button,
-  .cancel-button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .settings-title {
-    font-size: 1.8rem;
-  }
-
-  .section-title {
-    font-size: 1.3rem;
-  }
-
-  .section-title::before,
-  .section-title::after {
-    width: 20px;
-  }
-
-  .section-title::before {
-    left: -20px;
-  }
-
-  .section-title::after {
-    right: -20px;
-  }
-
-  .settings-description {
-    font-size: 1rem;
-  }
-
-  .setting-description {
-    font-size: 0.85rem;
-  }
-
-  .settings-footer {
-    margin-top: 1.5rem;
-  }
-}
-
 .link-button-container {
   display: flex;
   justify-content: space-between;
@@ -575,25 +492,6 @@ input:checked + .toggle-slider:before {
   color: rgba(244, 67, 54, 0.9);
   font-size: 1rem;
 }
-
-@media (max-width: 768px) {
-  .link-button-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .link-button {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .connected-button {
-    width: 100%;
-    padding-left: 1.5rem;
-  }
-}
-
 .avatar-upload-container {
   display: flex;
   align-items: center;
@@ -659,5 +557,103 @@ input:checked + .toggle-slider:before {
   .remove-button {
     flex: 1;
     text-align: center;
+  }
+  
+  .settings-page {
+    padding: 0 1rem;
+    margin: 1.5rem auto;
+  }
+
+  .settings-content {
+    padding: 1.75rem;
+  }
+
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .setting-input,
+  .setting-input-group {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .toggle-item {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .section-title-container {
+    margin-bottom: 1.75rem;
+  }
+
+  .settings-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .input-unit {
+    min-width: 78px;
+  }
+
+  .save-button,
+  .cancel-button {
+    width: 100%;
+  }
+
+  .link-button-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .link-button {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .connected-button {
+    width: 100%;
+    padding-left: 1.5rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .settings-title {
+    font-size: 1.8rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .section-title::before,
+  .section-title::after {
+    width: 20px;
+  }
+
+  .section-title::before {
+    left: -20px;
+  }
+
+  .section-title::after {
+    right: -20px;
+  }
+
+  .settings-description {
+    font-size: 1rem;
+  }
+
+  .setting-description {
+    font-size: 0.85rem;
+  }
+
+  .settings-footer {
+    margin-top: 1.5rem;
   }
 }

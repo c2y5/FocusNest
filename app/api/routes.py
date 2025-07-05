@@ -41,10 +41,9 @@ def tasks():
         return jsonify({"error": "Unauthorized"}), 401
     
     if request.method == "GET":
-        # Get tasks sorted by order_index
         tasks = list(mongo.db.tasks.find(
             {"user_id": session["user"]["id"]}
-        ).sort("order_index", 1))  # 1 for ascending order
+        ).sort("order_index", 1))
 
         for task in tasks:
             task["_id"] = str(task["_id"])
@@ -58,13 +57,11 @@ def tasks():
         if "title" not in data or not data["title"]:
             return jsonify({"error": "Title is required"}), 400
         
-        # Get the current highest order_index and increment by 1
         last_task = mongo.db.tasks.find_one(
             {"user_id": session["user"]["id"]},
-            sort=[("order_index", -1)]  # Get the task with highest order_index
+            sort=[("order_index", -1)]
         )
         
-        # Set order_index to 0 if no tasks exist, otherwise increment
         data["order_index"] = 0 if not last_task else last_task["order_index"] + 1
         
         result = mongo.db.tasks.insert_one(data)
@@ -159,7 +156,7 @@ def settings():
         data["user_id"] = session["user"]["id"]
 
         if re.match("^guest_[A-Z0-9]{8}$", session["user"]["id"]):
-            if "preferredName" in data and data["preferredName"]:
+            if "preferredName" in data and data["preferredName"] and not current_app.config["GUEST_MODE_CUSTOMIZABLE"]:
                 return jsonify({"error": "Guest users cannot change their preferred name"}), 403
 
         mongo.db.settings.update_one(

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/settingsPage.css">
+<div class="settings-page">
+    <div class="settings-header">
+        <h1 class="settings-title">Settings</h1>
+        <p class="settings-description">Customize your experience</p>
+    </div>
+
+    <div class="settings-content">
+        <div class="settings-section">
+            <div class="section-title-container">
+                <h2 class="section-title">Personal</h2>
+            </div>
+            <div class="setting-item">
+                <label for="preferredName" class="setting-label">Preferred Name</label>
+                <input type="text" id="preferredName" class="setting-input" placeholder="Enter your name">
+            </div>
+            <div class="setting-item">
+                <label class="setting-label">Profile Picture</label>
+                <div class="avatar-upload-container">
+                    <div class="avatar-preview" id="avatarPreview">
+                        <img id="avatarImage" src="/static/img/default-profile.png" alt="Profile Picture">
+                    </div>
+                    <div class="avatar-upload-controls">
+                        <input type="file" id="avatarUpload" accept=".jpg,.jpeg,.png" style="display: none;">
+                        <button class="upload-button" id="uploadButton">Upload New</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <div class="section-title-container">
+                <h2 class="section-title">Pomodoro Timer</h2>
+            </div>
+            
+            <div class="setting-item">
+                <label for="workDuration" class="setting-label">Work Duration (1-120)</label>
+                <div class="setting-input-group">
+                    <input type="number" id="workDuration" class="setting-input number-input" min="1" max="120">
+                    <span class="input-unit">minutes</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label for="shortBreakDuration" class="setting-label">Short Break (1-30)</label>
+                <div class="setting-input-group">
+                    <input type="number" id="shortBreakDuration" class="setting-input number-input" min="1" max="30">
+                    <span class="input-unit">minutes</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label for="longBreakDuration" class="setting-label">Long Break (1-60)</label>
+                <div class="setting-input-group">
+                    <input type="number" id="longBreakDuration" class="setting-input number-input" min="1" max="60">
+                    <span class="input-unit">minutes</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label for="longBreakInterval" class="setting-label">Long Break Interval (1-10)</label>
+                <div class="setting-input-group">
+                    <input type="number" id="longBreakInterval" class="setting-input number-input" min="1" max="10">
+                    <span class="input-unit">sessions</span>
+                </div>
+            </div>
+            
+            <div class="setting-item toggle-item">
+                <div class="toggle-label-group">
+                    <label class="setting-label">Auto-start Short Break</label>
+                    <p class="setting-description">Automatically start the short break timer when work session ends</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="autoStartShortBreak">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item toggle-item">
+                <div class="toggle-label-group">
+                    <label class="setting-label">Auto-start Long Break</label>
+                    <p class="setting-description">Automatically start the long break timer when interval is reached</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="autoStartLongBreak">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item toggle-item">
+                <div class="toggle-label-group">
+                    <label class="setting-label">Auto-start Work Session</label>
+                    <p class="setting-description">Automatically start the next work session when break ends</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="autoStartWork">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-section" style="display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center;">
+            <div class="section-title-container">
+                <h2 class="section-title">Account Linking</h2>
+            </div>
+            
+            <p style="color: var(--accent); margin-bottom: 2rem; max-width: 500px;">
+                To unlock all settings and customization options, please log in.
+            </p>
+        </div>
+    </div>
+
+    <div class="settings-footer">
+        <button class="save-button">Save Changes</button>
+        <button class="cancel-button">Cancel</button>
+    </div>
+</div>
+
+<script src="/static/js/settingsHandler.js"></script>
+
+{% endblock %}
