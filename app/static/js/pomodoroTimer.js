@@ -55,18 +55,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
         async loadTimerSession() {
             try {
-                const response = await fetch("/api/timer_session");
-
-                if (!response.ok) throw new Error("Failed to load timer session");
-
-                const data = await response.json();
-                if (data.error) {
+                const storedData = localStorage.getItem("timer_session");
+                
+                if (!storedData) {
                     console.log("No existing timer session");
                     this.resetTimer();
                     this.setActiveMode("work");
                     return;
                 }
 
+                const data = JSON.parse(storedData);
+                
                 if (data.current_state === "work") {
                     this.timeLeft = data.work_time || this.settings.workDuration * 60;
                 }
@@ -95,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 
                 this.updateDisplay();
-                console.log("Loaded timer session:", data)
+                console.log("Loaded timer session:", data);
             } catch (error) {
                 console.error("Error loading timer session:", error);
                 this.resetTimer();
@@ -107,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (this.syncInterval) {
                 clearInterval(this.syncInterval);
             }
-            
+
             this.syncInterval = setInterval(() => {
                 this.syncTimerSession();
             }, 1000);
@@ -119,22 +118,16 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             try {
-                const response = await fetch("/api/timer_session", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        current_state: this.currentMode,
-                        current_phase: this.pomodoroCount,
-                        is_running: this.isRunning,
-                        work_time: this.currentMode === "work" ? this.timeLeft : this.settings.workDuration * 60,
-                        short_break_time: this.currentMode === "shortBreak" ? this.timeLeft : this.settings.shortBreakDuration * 60,
-                        long_break_time: this.currentMode === "longBreak" ? this.timeLeft : this.settings.longBreakDuration * 60
-                    })
-                });
+                const sessionData = {
+                    current_state: this.currentMode,
+                    current_phase: this.pomodoroCount,
+                    is_running: this.isRunning,
+                    work_time: this.currentMode === "work" ? this.timeLeft : this.settings.workDuration * 60,
+                    short_break_time: this.currentMode === "shortBreak" ? this.timeLeft : this.settings.shortBreakDuration * 60,
+                    long_break_time: this.currentMode === "longBreak" ? this.timeLeft : this.settings.longBreakDuration * 60
+                };
 
-                if (!response.ok) throw new Error("Failed to sync timer session");
+                localStorage.setItem("timer_session", JSON.stringify(sessionData));
             } catch (error) {
                 console.error("Error syncing timer session:", error);
             }
