@@ -1122,7 +1122,6 @@ p {
   transition: all 0.3s ease;
   margin-bottom: 0.5rem;
   max-width: 100%;
-  overflow: hidden;
 }
 
 .task-item:hover {
@@ -1294,10 +1293,16 @@ p {
   animation: pulse 0.5s infinite;
 }
 
+.task-item {
+  cursor: grab;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  position: relative;
+}
+
 .task-item.dragging {
   opacity: 0.5;
   transform: scale(0.98);
-  background: rgba(255, 255, 255, 0.05);
+  background: #f5f5f5;
 }
 
 .task-item.drag-over-top::before {
@@ -1307,7 +1312,7 @@ p {
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--green-accent);
+  background: #4CAF50;
 }
 
 .task-item.drag-over-bottom::after {
@@ -1317,7 +1322,7 @@ p {
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--green-accent);
+  background: #4CAF50;
 }
 
 @media (max-width: 768px) {
@@ -2119,6 +2124,7 @@ p {
   right: 0;
   height: 2px;
   background: #4caf50;
+  z-index: 2;
 }
 
 .task-item.drag-over-bottom::after {
@@ -2129,6 +2135,7 @@ p {
   right: 0;
   height: 2px;
   background: #4caf50;
+  z-index: 2;
 }
 
 .drag-ghost {

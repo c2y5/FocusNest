@@ -461,8 +461,6 @@ def change_tasks_order():
         "user_id": session["user"]["id"]
     }))
     
-    if len(tasks) != len(obj_ids):
-        return jsonify({"error": "Some tasks not found"}), 404
     
     for i, task_id in enumerate(obj_ids):
         mongo.db.tasks.update_one(
