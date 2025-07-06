@@ -100,6 +100,15 @@
             <script src="/static/js/popupHandler.js"></script>
         {% endif %}
         <main class="content">
+            {% if request.host == "focusnest.amsky.xyz" %}
+            <div class="announcement-bar" id="announcementBar" hidden>
+                <div class="announcement-content">
+                    <span class="announcement-text" id="announcementText"></span>
+                </div>
+            </div>
+            <script src="/static/js/notices.js"></script>
+            {% endif %}
+
             {% block content %}{% endblock %}
         </main>
         <footer class="app-footer">

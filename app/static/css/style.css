@@ -1831,6 +1831,38 @@ p {
   animation: pulse-glow 2s infinite;
 }
 
+.announcement-bar {
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    background: var(--accent);
+    color: white;
+    padding: 0.5rem 2rem;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border-radius: 8px 8px 8px 8px;
+    white-space: nowrap;
+}
+
+.announcement-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.announcement-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    flex-grow: 1;
+    padding: 0 1rem;
+}
+
 @keyframes pulse-glow {
   0% {
     box-shadow: 0 0 0 0 rgba(78, 205, 196, 0.4);
@@ -1844,6 +1876,22 @@ p {
 }
 
 @media (max-width: 768px) {
+  .announcement-bar {
+    padding: 0.5rem;
+    white-space: normal;
+    margin-top: 3rem;
+  }
+  
+  .announcement-text {
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+  }
+  
+  .announcement-close {
+    font-size: 1rem;
+    padding: 0.1rem 0.3rem;
+  }
+
   .header-content {
     height: 60px;
     padding: 0 1rem;
@@ -2101,6 +2149,10 @@ p {
 }
 
 @media (max-width: 480px) {
+  .announcement-text {
+    font-size: 0.75rem;
+  }
+
   .mockup {
     height: 300px;
     margin-top: 2rem;

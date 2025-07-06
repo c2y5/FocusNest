@@ -264,6 +264,7 @@ FocusNest/
 |   |   |   ├── linkingHandler.js
 |   |   |   ├── liveCounter.js
 |   |   |   ├── musicHandler.js
+|   |   |   ├── notices.js            # You can safely remove, this is just for notices on focusnest.amsky.xyz
 |   |   |   ├── pomodoroTimer.js
 |   |   |   ├── popupHandler.js
 |   |   |   ├── quote.js
