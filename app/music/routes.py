@@ -27,7 +27,6 @@ cache_lock = Lock()
 
 @mus_bp.route("/")
 def home():
-    print(current_app.root_path)
     if not session.get("user"):
         return redirect(url_for("auth.login"))
     return render_template("music.html")
