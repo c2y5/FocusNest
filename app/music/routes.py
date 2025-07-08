@@ -1,12 +1,13 @@
 # app/music/routes.py
 # type: ignore
 
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response, current_app
 import subprocess
 from threading import Lock
 from collections import defaultdict
 from ytmusicapi import YTMusic
 import sys
+import os
 
 mus_bp = Blueprint("music", __name__, url_prefix="/music")
 STREAM_LIST = {
@@ -26,6 +27,7 @@ cache_lock = Lock()
 
 @mus_bp.route("/")
 def home():
+    print(current_app.root_path)
     if not session.get("user"):
         return redirect(url_for("auth.login"))
     return render_template("music.html")
@@ -63,13 +65,18 @@ def get_stream_data(stream_id):
 @mus_bp.route("/play/<stream_id>")
 def play_stream(stream_id):
     track_url = f"https://music.youtube.com/watch?v={STREAM_LIST.get(stream_id, [None])[0]}"
+    cmd = [sys.executable, "-m", "yt_dlp",
+        "-g", "--no-playlist",
+        "--cookies", os.path.join(current_app.root_path, "cookies.txt"),
+        track_url
+    ]
+
+    if os.path.exists(os.path.join(current_app.root_path, "cookies.txt")):
+        cmd.append("--cookies")
+        cmd.append(os.path.join(current_app.root_path, "cookies.txt"))
 
     try:
-        stream_url = subprocess.check_output([
-            sys.executable, "-m", "yt_dlp",
-            "-g", "--no-playlist",
-            track_url
-        ]).decode().strip()
+        stream_url = subprocess.check_output(cmd).decode().strip()
 
         def generate():
             ffmpeg_cmd = [
