@@ -18,14 +18,23 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(playlists => {
             if (playlists.length > 0) {
                 populateDropdown(playlists);
-                selectFirstPlaylist(playlists[0]);
+                const storedData = localStorage.getItem("lastSelectedPlaylist");
+                if (storedData) {
+                    const lastSelected = JSON.parse(storedData);
+                    const lastPlaylist = playlists.find(p => p.id === lastSelected.id);
+                    if (lastPlaylist) {
+                        selectDefaultPlaylist(lastPlaylist);
+                    } else {
+                        selectDefaultPlaylist(playlists[0]);
+                    }
+                }
             }
         })
         .catch(err => {
             console.error("Error loading playlists:", err);
             const defaultPlaylists = [{ name: "Error Loading List", id: "error" }];
             populateDropdown(defaultPlaylists);
-            selectFirstPlaylist(defaultPlaylists[0]);
+            selectDefaultPlaylist(defaultPlaylists[0]);
         });
 
     function populateDropdown(playlists) {
@@ -64,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function selectFirstPlaylist(firstPlaylist) {
+    function selectDefaultPlaylist(firstPlaylist) {
         dropdowns.forEach(dropdown => {
             const selectedOption = dropdown.querySelector(".selected-option");
             selectedOption.textContent = firstPlaylist.name;
@@ -76,6 +85,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function loadAlbumArt(trackId) {
+        localStorage.setItem("lastSelectedPlaylist", JSON.stringify({ id: trackId }));
+
         fetch(`/music/get_img/${trackId}`)
             .then(response => response.json())
             .then(data => {

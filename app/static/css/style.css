@@ -992,7 +992,7 @@ p {
   left: 0;
   right: 0;
   height: 2px;
-  background: #4CAF50;
+  background: #4caf50;
 }
 
 .task-item.drag-over-bottom::after {
@@ -1002,7 +1002,7 @@ p {
   left: 0;
   right: 0;
   height: 2px;
-  background: #4CAF50;
+  background: #4caf50;
 }
 
 .timer-card {
@@ -1832,35 +1832,128 @@ p {
 }
 
 .announcement-bar {
-    position: fixed;
-    left: 50%;
-    transform: translate(-50%, -100%);
-    background: var(--accent);
-    color: white;
-    padding: 0.5rem 2rem;
-    transition: transform 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    border-radius: 8px 8px 8px 8px;
-    white-space: nowrap;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  background: var(--accent);
+  color: white;
+  padding: 0.5rem 2rem;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 8px 8px 8px 8px;
+  white-space: nowrap;
 }
 
 .announcement-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .announcement-text {
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-align: center;
-    flex-grow: 1;
-    padding: 0 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  flex-grow: 1;
+  padding: 0 1rem;
+}
+
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: var(--card-light);
+  border: var(--border-light);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  cursor: grab;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.music-player.dragging {
+  cursor: grabbing;
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.music-player:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.music-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.music-controls {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  transition: background 0.3s ease;
+}
+
+.music-player:hover .music-controls {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.music-player:hover .music-art {
+  opacity: 0.9;
+}
+
+.play-pause-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 2;
+}
+
+.play-pause-btn:hover {
+  transform: scale(1.1);
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.2rem;
+  z-index: 3;
+}
+
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes pulse-glow {
@@ -1876,17 +1969,28 @@ p {
 }
 
 @media (max-width: 768px) {
+  .music-player {
+    width: 50px;
+    height: 50px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .play-pause-btn {
+    font-size: 1.3rem;
+  }
+
   .announcement-bar {
     padding: 0.5rem;
     white-space: normal;
     margin-top: 3rem;
   }
-  
+
   .announcement-text {
     font-size: 0.8rem;
     margin-right: 0.5rem;
   }
-  
+
   .announcement-close {
     font-size: 1rem;
     padding: 0.1rem 0.3rem;
@@ -2292,7 +2396,7 @@ p {
   .mockup {
     height: 250px;
   }
-  
+
   .emotion-options {
     flex-wrap: wrap;
     justify-content: center;

@@ -57,6 +57,9 @@ def get_stream_data(stream_id):
 
 @mus_bp.route("/play/<stream_id>")
 def play_stream(stream_id):
+    if not stream_id or stream_id not in STREAM_LIST:
+        return jsonify({"error": "Invalid stream ID"}), 400
+
     track_url = f"https://music.youtube.com/watch?v={STREAM_LIST.get(stream_id, [None])[0]}"
     cmd = [sys.executable, "-m", "yt_dlp",
         "-g", "--no-playlist"
