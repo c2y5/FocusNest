@@ -8,7 +8,7 @@ from collections import defaultdict
 from ytmusicapi import YTMusic
 import sys
 import os
-import browser_cookie3
+import http.cookiejar
 
 mus_bp = Blueprint("music", __name__, url_prefix="/music")
 STREAM_LIST = {
@@ -49,8 +49,12 @@ def get_stream_data(stream_id):
     if not stream:
         return {"error": "Stream not found"}, 404
     
-    if os.path.exists(os.path.join(current_app.root_path, "cookies.txt")):
-        ytmusic = YTMusic(cookies=browser_cookie3.load(cookie_file=os.path.join(current_app.root_path, "cookies.txt")))
+    if os.path.exists(os.path.join(current_app.root_path, "cookies.json")):
+        cookie_jar = http.cookiejar.MozillaCookieJar(os.path.join(current_app.root_path, "cookies.json"))
+        cookie_jar.load()
+        cookies_dict = {cookie.name: cookie.value for cookie in cookie_jar}
+
+        ytmusic = YTMusic(cookies=cookies_dict)
     else:
         ytmusic = YTMusic()
     

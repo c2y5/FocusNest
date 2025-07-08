@@ -10,4 +10,3 @@ standard-imghdr==3.13.0
 pymupdf==1.26.3
 ytmusicapi==1.10.3
 yt-dlp==2025.6.30
-browser-cookie3==0.20.1
