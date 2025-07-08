@@ -1,4 +1,4 @@
-# FocusNest (base app) 🪹
+# FocusNest (v1) 🪹
 
 # Table of Contents
 - [What is FocusNest?](#what-is-focusnest)
