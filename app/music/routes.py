@@ -8,6 +8,7 @@ from collections import defaultdict
 from ytmusicapi import YTMusic
 import sys
 import os
+import browser_cookie3
 
 mus_bp = Blueprint("music", __name__, url_prefix="/music")
 STREAM_LIST = {
@@ -21,7 +22,6 @@ STREAM_LIST = {
     "DarkAmbient": ["S_MOd40zlYU", "Dark Ambient Radio 🌃"],
     "Synthwave": ["4xDzrJKXOOY", "Synthwave Radio 🌌 "],
 }
-ytmusic = YTMusic()
 process_cache = defaultdict(dict)
 cache_lock = Lock()
 
@@ -48,6 +48,11 @@ def get_stream_data(stream_id):
     stream = STREAM_LIST.get(stream_id)
     if not stream:
         return {"error": "Stream not found"}, 404
+    
+    if os.path.exists(os.path.join(current_app.root_path, "cookies.txt")):
+        ytmusic = YTMusic(cookies=browser_cookie3.load(cookie_file=os.path.join(current_app.root_path, "cookies.txt")))
+    else:
+        ytmusic = YTMusic()
     
     try:
         data = ytmusic.get_song(STREAM_LIST[stream_id][0])
