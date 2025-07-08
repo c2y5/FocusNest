@@ -63,6 +63,8 @@ def get_stream_data(stream_id):
         if not data:
             return {"error": "Song data not found"}, 404
         
+        print(data)
+        
         thumbnail = data.get("videoDetails", {}).get("thumbnail", {}).get("thumbnails", [])[3]["url"]
 
         return jsonify({
