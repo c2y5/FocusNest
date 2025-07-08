@@ -5,10 +5,8 @@ from flask import Blueprint, render_template, session, redirect, url_for, jsonif
 import subprocess
 from threading import Lock
 from collections import defaultdict
-from ytmusicapi import YTMusic
 import sys
 import os
-import http.cookiejar
 
 mus_bp = Blueprint("music", __name__, url_prefix="/music")
 STREAM_LIST = {
@@ -22,6 +20,7 @@ STREAM_LIST = {
     "DarkAmbient": ["S_MOd40zlYU", "Dark Ambient Radio 🌃", "https://hc-cdn.hel1.your-objectstorage.com/s/v3/f5e1e8045b71469c2551b768b621d7283908edc5_image.png"],
     "Synthwave": ["4xDzrJKXOOY", "Synthwave Radio 🌌 ", "https://hc-cdn.hel1.your-objectstorage.com/s/v3/f3520bf7d57f1cebc53f5a024d7c8974f38adf2f_image.png"],
 }
+
 process_cache = defaultdict(dict)
 cache_lock = Lock()
 
@@ -50,7 +49,6 @@ def get_stream_data(stream_id):
     
     try:
         thumbnail = STREAM_LIST[stream_id][2]
-
         return jsonify({
             "image": thumbnail or "/static/img/music-placeholder.jpg",
         })
@@ -61,14 +59,14 @@ def get_stream_data(stream_id):
 def play_stream(stream_id):
     track_url = f"https://music.youtube.com/watch?v={STREAM_LIST.get(stream_id, [None])[0]}"
     cmd = [sys.executable, "-m", "yt_dlp",
-        "-g", "--no-playlist",
-        "--cookies", os.path.join(current_app.root_path, "cookies.txt"),
-        track_url
+        "-g", "--no-playlist"
     ]
 
     if os.path.exists(os.path.join(current_app.root_path, "cookies.txt")):
         cmd.append("--cookies")
         cmd.append(os.path.join(current_app.root_path, "cookies.txt"))
+    
+    cmd.append(track_url)
 
     try:
         stream_url = subprocess.check_output(cmd).decode().strip()
@@ -83,15 +81,21 @@ def play_stream(stream_id):
                 "-"
             ]
             with subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE) as proc:
-                while True:
-                    chunk = proc.stdout.read(1024)
-                    if not chunk:
-                        break
-                    yield chunk
+                try:
+                    while True:
+                        chunk = proc.stdout.read(1024)
+                        if not chunk:
+                            break
+                        yield chunk
+                except Exception as e:
+                    current_app.logger.error(f"Error while streaming: {e}")
+                    yield b""
 
         return Response(stream_with_context(generate()), mimetype="audio/mpeg")
 
     except subprocess.CalledProcessError as e:
+        current_app.logger.error(f"Failed to get stream URL: {e}")
         return jsonify({"error": "Failed to get stream URL", "details": str(e)}), 500
     except Exception as e:
+        current_app.logger.error(f"Unexpected error: {e}")
         return jsonify({"error": str(e)}), 500

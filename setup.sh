@@ -7,7 +7,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 gunicorn -b ":$PORT" "app:create_app()" \
-  --timeout 120 \
+  --timeout 0 \
   --access-logfile - \
   --access-logformat '%(h)s - - %(t)s "%(r)s" %(s)s -' \
   --error-logfile - \
