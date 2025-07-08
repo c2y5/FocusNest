@@ -18,7 +18,6 @@
   - [Setup MongoDB](#setup-mongodb)
   - [Setup AI Configs](#setup-ai-configs)
   - [Live counter](#live-counter)
-  - [Upload Music](#upload-music)
   - [Usage](#usage)
   - [Misc](#misc)
 - [Project Structure](#project-strcture)
@@ -48,7 +47,7 @@
 ### Helpful Tools⚒️
 - **Timer**: Custom work/break sessions
 - **Flashcards**: Turn notes into study cards instantly
-- **Music**: Relaxing background sounds
+- **Music**: Relaxing background sounds - fetched from one of nine lofi girl's stream
 - **To-do List**: Keep track of what you need to do
 
 ### Extras✨
@@ -188,10 +187,6 @@
 - You can find it in ``app/static/js/liveCounter.js`` in ``line 8``
 - Change ``focusnest`` into another one e.g. selfhosted_focusnest_abc123
 
-## Upload music
-- If you want music, you can put songs (mp3 format) in ``app/static/music``
-- To change the album cover replace ``app/static/img/music-placeholder.jpg`` with your own image
-
 ## Usage
 - Either run
 
@@ -273,7 +268,6 @@ FocusNest/
 |   |   |   ├── tasksHandler.js
 |   |   |   ├── timerBase.js
 |   |   |   └── timerSettings.js
-│   │   ├── music/
 │   │   ├── sounds/
 |   |   |   └── complete.mp3
 │   │   └── robots.txt

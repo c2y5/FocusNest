@@ -7,36 +7,28 @@
         <div class="music-card">
             <div class="music-header">
                 <h1>Music</h1>
+                <div class="custom-dropdown">
+                    <button class="dropdown-toggle">
+                        <span class="selected-option">Select Radio</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <ul class="dropdown-menu"></ul>
+                </div>
             </div>
             
             <div class="music-display">
                 <img id="music-album-art" src="/static/img/music-placeholder.jpg" alt="Album Art" class="album-art">
                 <div class="track-info">
-                    <h2 id="music-track-name">Not Playing</h2>
+                    <h2 id="music-track-name"></h2>
                 </div>
             </div>
             
             <div class="music-controls">
-                <button id="music-prev" class="music-btn">
-                    <i class="fas fa-step-backward"></i>
-                </button>
                 <button id="music-play" class="music-btn play-btn">
                     <i class="fas fa-play"></i>
                 </button>
-                <button id="music-next" class="music-btn">
-                    <i class="fas fa-step-forward"></i>
-                </button>
             </div>
-            
-            <div class="music-progress">
-                <div class="progress-bar">
-                    <div id="music-progress" class="progress-fill"></div>
-                </div>
-                <div class="time-display">
-                    <span id="music-current-time">0:00</span>
-                    <span id="music-duration">0:00</span>
-                </div>
-            </div>
+            <audio id="audio-player" type="audio/mpeg"></audio>
         </div>
     </div>
 </div>

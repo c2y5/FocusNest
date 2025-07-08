@@ -1,13 +1,28 @@
 # app/music/routes.py
 # type: ignore
 
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, current_app
-import os
-import random
-import base64
-from mutagen.mp3 import MP3
-from mutagen.id3 import ID3
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response
+import subprocess
+from threading import Lock
+from collections import defaultdict
+from ytmusicapi import YTMusic
+import sys
+
 mus_bp = Blueprint("music", __name__, url_prefix="/music")
+STREAM_LIST = {
+    "SleepAmbient": ["xORCbIptqcc", "Sleep Ambient Radio 💤"],
+    "MedievalLofi": ["IxPANmjPaek", "Medieval Lofi Radio 🏰"],
+    "SadLofi": ["P6Segk8cr-c", "Sad Lofi Radio ☔"],
+    "JazzLofi": ["HuFYqnbVbzY", "Jazz Lofi Radio 🎷"],
+    "LofiHipHop": ["jfKfPfyJRdk", "Lofi Hip Hop Radio 📚"],
+    "PeacefulPiano": ["TtkFsfOP9QI", "Peaceful Piano Radio 🎹"],
+    "AsianLofi": ["Na0w3Mz46GA", "Asian Lofi Radio ⛩️"],
+    "DarkAmbient": ["S_MOd40zlYU", "Dark Ambient Radio 🌃"],
+    "Synthwave": ["4xDzrJKXOOY", "Synthwave Radio 🌌 "],
+}
+ytmusic = YTMusic()
+process_cache = defaultdict(dict)
+cache_lock = Lock()
 
 @mus_bp.route("/")
 def home():
@@ -15,47 +30,66 @@ def home():
         return redirect(url_for("auth.login"))
     return render_template("music.html")
 
-@mus_bp.route("/get_music")
-def get_music():
+@mus_bp.route("/list")
+def list_streams():
     if not session.get("user"):
-        return redirect(url_for("auth.login"))
+        return {"error": "Unauthorized"}, 401
     
-    MUSIC_FOLDER = os.path.join(current_app.root_path, "static", "music")
+    streams = [{"name": data[1], "id": name} for name, data in STREAM_LIST.items()]
+    return jsonify(streams)
 
-    music_files = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(".mp3")]
-    if not music_files:
-        return jsonify({"error": "No music files found"}), 404
+@mus_bp.route("/get_img/<stream_id>")
+def get_stream_data(stream_id):
+    if not session.get("user"):
+        return {"error": "Unauthorized"}, 401
+    
+    stream = STREAM_LIST.get(stream_id)
+    if not stream:
+        return {"error": "Stream not found"}, 404
+    
+    try:
+        data = ytmusic.get_song(STREAM_LIST[stream_id][0])
+        if not data:
+            return {"error": "Song data not found"}, 404
+        
+        thumbnail = data.get("videoDetails", {}).get("thumbnail", {}).get("thumbnails", [])[3]["url"]
 
-    previous = session.get("previous_music")
-    choices = [f for f in music_files if f != previous] or music_files
-    selected_file = random.choice(choices)
-    session["previous_music"] = selected_file
+        return jsonify({
+            "image": thumbnail or "/static/img/music-placeholder.jpg",
+        })
+    except Exception as e:
+        return {"error": str(e)}, 500
 
-    audio_url = url_for("static", filename=f"music/{selected_file}")
-    file_path = os.path.join(MUSIC_FOLDER, selected_file)
-
-    title = os.path.splitext(selected_file)[0]
-    artist = "Unknown Artist"
-    image_data_url = "/static/img/music-placeholder.jpg"
+@mus_bp.route("/play/<stream_id>")
+def play_stream(stream_id):
+    track_url = f"https://music.youtube.com/watch?v={STREAM_LIST.get(stream_id, [None])[0]}"
 
     try:
-        audio = MP3(file_path, ID3=ID3)
-        tags = ID3(file_path)
+        stream_url = subprocess.check_output([
+            sys.executable, "-m", "yt_dlp",
+            "-g", "--no-playlist",
+            track_url
+        ]).decode().strip()
 
-        title = tags.get("TIT2").text[0] if tags.get("TIT2") else title
-        artist = tags.get("TPE1").text[0] if tags.get("TPE1") else "Unknown Artist"
+        def generate():
+            ffmpeg_cmd = [
+                "ffmpeg",
+                "-i", stream_url,
+                "-f", "mp3",
+                "-vn",
+                "-loglevel", "quiet",
+                "-"
+            ]
+            with subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE) as proc:
+                while True:
+                    chunk = proc.stdout.read(1024)
+                    if not chunk:
+                        break
+                    yield chunk
 
-        if tags.get("APIC:"):
-            album_art = tags.get("APIC:").data
-            encoded_image = base64.b64encode(album_art).decode("utf-8")
-            mime = tags.get("APIC:").mime
-            image_data_url = f"data:{mime};base64,{encoded_image}"
+        return Response(stream_with_context(generate()), mimetype="audio/mpeg")
+
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": "Failed to get stream URL", "details": str(e)}), 500
     except Exception as e:
-        print(f"Error reading metadata: {e}")
-
-    return jsonify({
-        "audio_url": audio_url,
-        "title": title,
-        "artist": artist,
-        "image": image_data_url
-    })
+        return jsonify({"error": str(e)}), 500

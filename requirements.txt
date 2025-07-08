@@ -7,5 +7,6 @@ requests==2.32.4
 gunicorn==23.0.0
 Pillow==11.3.0
 standard-imghdr==3.13.0
-mutagen==1.47.0
 pymupdf==1.26.3
+ytmusicapi==1.10.3
+yt-dlp==2025.6.30

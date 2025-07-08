@@ -1,101 +1,132 @@
-const audioPlayer = new Audio();
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdowns = document.querySelectorAll(".custom-dropdown");
+    const audioPlayer = document.getElementById("audio-player");
+    const playBtn = document.getElementById("music-play");
+    const albumArt = document.querySelector(".album-art");
+    const trackNameElement = document.getElementById("music-track-name");
 
-const trackName = document.getElementById("music-track-name");
-const trackArtist = document.getElementById("music-track-artist");
-const albumArt = document.getElementById("music-album-art");
+    const loadingElement = document.createElement("div");
+    loadingElement.className = "loading-spinner";
+    loadingElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    loadingElement.style.display = "none";
+    document.querySelector(".music-display").appendChild(loadingElement);
 
-const playBtn = document.getElementById("music-play");
-const nextBtn = document.getElementById("music-next");
-const prevBtn = document.getElementById("music-prev");
+    let isLoading = false;
 
-const progressFill = document.getElementById("music-progress");
-const currentTimeDisplay = document.getElementById("music-current-time");
-const durationDisplay = document.getElementById("music-duration");
+    fetch("/music/list")
+        .then(response => response.json())
+        .then(playlists => {
+            if (playlists.length > 0) {
+                populateDropdown(playlists);
+                selectFirstPlaylist(playlists[0]);
+            }
+        })
+        .catch(err => {
+            console.error("Error loading playlists:", err);
+            const defaultPlaylists = [{ name: "Error Loading List", id: "error" }];
+            populateDropdown(defaultPlaylists);
+            selectFirstPlaylist(defaultPlaylists[0]);
+        });
 
-let currentTrackData = null;
-let previousTrackData = null;
+    function populateDropdown(playlists) {
+        dropdowns.forEach(dropdown => {
+            const menu = dropdown.querySelector(".dropdown-menu");
+            const toggle = dropdown.querySelector(".dropdown-toggle");
+            menu.innerHTML = "";
 
-function loadNewTrack() {
-  fetch("/music/get_music?" + new Date().getTime())
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        alert(data.error);
-        return;
-      }
+            playlists.forEach(playlist => {
+                const li = document.createElement("li");
+                li.textContent = playlist.name;
+                li.dataset.value = playlist.id;
+                menu.appendChild(li);
+            });
 
-      previousTrackData = currentTrackData;
-      currentTrackData = data;
+            const selectedOption = dropdown.querySelector(".selected-option");
+            const options = dropdown.querySelectorAll(".dropdown-menu li");
 
-      audioPlayer.src = data.audio_url;
-      audioPlayer.play();
+            toggle.addEventListener("click", function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle("active");
+            });
 
-      updateTrackInfo(data.title, data.artist, data.image);
-      updatePlayButton();
-    })
-    .catch(err => console.error("Error loading track:", err));
-}
+            options.forEach(option => {
+                option.addEventListener("click", function() {
+                    selectedOption.textContent = this.textContent;
+                    selectedOption.dataset.value = this.dataset.value;
+                    dropdown.classList.remove("active");
+                    trackNameElement.textContent = this.textContent;
+                    loadAlbumArt(this.dataset.value);
+                    audioPlayer.src = `/music/play/${this.dataset.value}`;
+                    audioPlayer.pause();
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                });
+            });
+        });
+    }
 
-function updateTrackInfo(title, artist, image) {
-  trackName.textContent = title || "Unknown Title";
-  trackArtist.textContent = artist || "Unknown Artist";
-  albumArt.src = image || "/static/img/music-placeholder.jpg";
-}
+    function selectFirstPlaylist(firstPlaylist) {
+        dropdowns.forEach(dropdown => {
+            const selectedOption = dropdown.querySelector(".selected-option");
+            selectedOption.textContent = firstPlaylist.name;
+            selectedOption.dataset.value = firstPlaylist.id;
+            trackNameElement.textContent = firstPlaylist.name;
+            loadAlbumArt(firstPlaylist.id);
+            audioPlayer.src = `/music/play/${firstPlaylist.id}`;
+        });
+    }
 
-function updatePlayButton() {
-  if (audioPlayer.paused) {
-    playBtn.innerHTML = '<i class="fas fa-play"></i>';
-  } else {
-    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-  }
-}
+    function loadAlbumArt(trackId) {
+        fetch(`/music/get_img/${trackId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.image) {
+                    albumArt.src = data.image;
+                }
+            })
+            .catch(err => {
+                console.error("Error loading album art:", err);
+                albumArt.src = "/static/img/music-placeholder.jpg";
+            });
+    }
 
-playBtn.addEventListener("click", () => {
-  if (!audioPlayer.src) {
-    loadNewTrack();
-  } else if (audioPlayer.paused) {
-    audioPlayer.play();
-  } else {
-    audioPlayer.pause();
-  }
-  updatePlayButton();
+    playBtn.addEventListener("click", () => {
+        if (isLoading) return;
+        
+        if (audioPlayer.paused) {
+            isLoading = true;
+            loadingElement.style.display = "block";
+            playBtn.disabled = true;
+            playBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            audioPlayer.play()
+                .then(() => {
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                })
+                .catch(err => {
+                    console.error("Playback failed:", err);
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                })
+                .finally(() => {
+                    loadingElement.style.display = "none";
+                    playBtn.disabled = false;
+                    isLoading = false;
+                });
+        } else {
+            audioPlayer.pause();
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+    });
+
+    audioPlayer.addEventListener("playing", () => {
+        loadingElement.style.display = "none";
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playBtn.disabled = false;
+        isLoading = false;
+    });
+
+    document.addEventListener("click", function() {
+        dropdowns.forEach(dropdown => {
+            dropdown.classList.remove("active");
+        });
+    });
 });
-
-nextBtn.addEventListener("click", () => {
-  loadNewTrack();
-});
-
-prevBtn.addEventListener("click", () => {
-  if (previousTrackData) {
-    const { audio_url, title, artist, image } = previousTrackData;
-    currentTrackData = previousTrackData;
-
-    audioPlayer.src = audio_url;
-    audioPlayer.play();
-
-    updateTrackInfo(title, artist, image);
-    updatePlayButton();
-  }
-});
-
-audioPlayer.addEventListener("timeupdate", () => {
-  if (audioPlayer.duration) {
-    const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-    progressFill.style.width = `${progressPercent}%`;
-
-    currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
-    durationDisplay.textContent = formatTime(audioPlayer.duration);
-  }
-});
-
-audioPlayer.addEventListener("ended", () => {
-  loadNewTrack();
-});
-
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60) || 0;
-  const secs = Math.floor(seconds % 60) || 0;
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-window.onload = loadNewTrack;
