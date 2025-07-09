@@ -1,9 +1,6 @@
 # app/__init__.py
 # type: ignore
 
-from gevent import monkey
-monkey.patch_all()
-
 from flask import Flask, render_template, send_from_directory
 import os
 from config import Config

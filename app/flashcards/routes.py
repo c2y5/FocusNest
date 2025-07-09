@@ -1,9 +1,6 @@
 # app/flashcards/routes.py
 # type: ignore
 
-from gevent import monkey
-monkey.patch_all()
-
 from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, current_app
 import json
 import requests
