@@ -1,6 +1,9 @@
 # app/api/routes.py
 # type: ignore
 
+from gevent import monkey
+monkey.patch_all()
+
 from flask import Blueprint, session, request, jsonify, current_app
 from app import mongo
 from bson.objectid import ObjectId

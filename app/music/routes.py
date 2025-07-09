@@ -1,6 +1,9 @@
 # app/music/routes.py
 # type: ignore
 
+from gevent import monkey
+monkey.patch_all()
+
 from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response, current_app
 import subprocess
 from threading import Lock

@@ -1,13 +1,14 @@
 # app/auth/routes.py
 # type: ignore
 
+from gevent import monkey
+monkey.patch_all()
+
 from flask import Blueprint, redirect, session, url_for, jsonify, request
 from authlib.integrations.flask_client import OAuth
 from flask import current_app as cpp
 import requests
 import re
-from datetime import datetime, timedelta, timezone
-from app import mongo
 
 auth_bp = Blueprint("auth", __name__)
 oauth = OAuth()

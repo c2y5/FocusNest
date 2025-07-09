@@ -9,3 +9,4 @@ Pillow==11.3.0
 standard-imghdr==3.13.0
 pymupdf==1.26.3
 yt-dlp==2025.6.30
+gevent==25.5.1
