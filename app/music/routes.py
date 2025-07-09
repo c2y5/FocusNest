@@ -4,7 +4,7 @@
 from gevent import monkey
 monkey.patch_all()
 
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response, current_app
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response, current_app, request
 from gevent import subprocess
 import sys
 import os
@@ -79,22 +79,35 @@ def play_stream(stream_id):
                 "-loglevel", "quiet",
                 "-"
             ]
-            with subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE) as proc:
-                try:
-                    while True:
-                        chunk = proc.stdout.read(1024)
-                        if not chunk:
-                            break
-                        yield chunk
-                except Exception as e:
-                    current_app.logger.error(f"Error while streaming: {e}")
-                    yield b""
+            proc = None
+            try:
+                proc = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE)
+                while True:
+                    if request.environ.get("werkzeug.server.shutdown"):
+                        print("Client disconnected, terminating stream")
+                        break
+                        
+                    chunk = proc.stdout.read(1024)
+                    if not chunk:
+                        break
+                    yield chunk
+            except GeneratorExit:
+                print("Client disconnected during streaming")
+            except Exception as e:
+                print(f"Error while streaming: {e}")
+            finally:
+                if proc and proc.poll() is None:
+                    proc.terminate()
+                    try:
+                        proc.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        proc.kill()
 
         return Response(stream_with_context(generate()), mimetype="audio/mpeg")
 
     except subprocess.CalledProcessError as e:
-        current_app.logger.error(f"Failed to get stream URL: {e}")
+        print(f"Failed to get stream URL: {e}")
         return jsonify({"error": "Failed to get stream URL", "details": str(e)}), 500
     except Exception as e:
-        current_app.logger.error(f"Unexpected error: {e}")
+        print(f"Unexpected error: {e}")
         return jsonify({"error": str(e)}), 500

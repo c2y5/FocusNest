@@ -156,7 +156,7 @@ def is_linked(provider):
 
         return jsonify({"is_linked": linked}), 200
     except requests.exceptions.RequestException as e:
-        cpp.logger.error(f"Error checking linked accounts: {e}")
+        print(f"Error checking linked accounts: {e}")
         return jsonify({"error": "Failed to check linked accounts"}), 500
 
 @auth_bp.route("/unlink/<provider>", methods=["POST"])
