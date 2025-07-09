@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let isDragging = false;
     let offsetX, offsetY;
     let isLoading = false;
+    let abortController = new AbortController();
 
     fetch("/music/list")
         .then(response => response.json())
@@ -51,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
         audioPlayer.src = `/music/play/${playlist.id}`;
         loadingSpinner.style.display = "block";
         
-        fetch(`/music/get_img/${playlist.id}`)
+        fetch(`/music/get_img/${playlist.id}`, { signal: abortController.signal })
             .then(response => response.json())
             .then(data => {
                 if (data.image) {
@@ -59,7 +60,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             })
             .catch(err => {
-                console.error("Error loading album art:", err);
+                if (err.name !== "AbortError") {
+                    console.error("Error loading album art:", err);
+                }
                 albumArt.src = "/static/img/music-placeholder.jpg";
             })
             .finally(() => {
@@ -92,6 +95,11 @@ document.addEventListener("DOMContentLoaded", function() {
             audioPlayer.pause();
             playBtn.textContent = "▶";
         }
+    });
+
+    window.addEventListener("beforeunload", () => {
+        abortController.abort();
+        audioPlayer.pause();
     });
 
     musicPlayer.addEventListener("mousedown", (e) => {
