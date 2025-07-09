@@ -5,7 +5,7 @@ from gevent import monkey
 monkey.patch_all()
 
 from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response, current_app
-import subprocess
+from gevent import subprocess
 import sys
 import os
 
