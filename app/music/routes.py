@@ -7,6 +7,8 @@ from threading import Lock
 from collections import defaultdict
 import sys
 import os
+from threading import Thread
+from queue import Queue
 
 mus_bp = Blueprint("music", __name__, url_prefix="/music")
 STREAM_LIST = {
@@ -75,24 +77,41 @@ def play_stream(stream_id):
         stream_url = subprocess.check_output(cmd).decode().strip()
 
         def generate():
-            ffmpeg_cmd = [
-                "ffmpeg",
-                "-i", stream_url,
-                "-f", "mp3",
-                "-vn",
-                "-loglevel", "quiet",
-                "-"
-            ]
-            with subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE) as proc:
+            buffer = Queue(maxsize=5)
+            
+            def ffmpeg_worker():
+                ffmpeg_cmd = [
+                    "ffmpeg",
+                    "-i", stream_url,
+                    "-f", "mp3",
+                    "-vn",
+                    "-loglevel", "quiet",
+                    "-"
+                ]
+                proc = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE)
                 try:
                     while True:
                         chunk = proc.stdout.read(1024)
                         if not chunk:
+                            buffer.put(None)
                             break
-                        yield chunk
+                        buffer.put(chunk)
                 except Exception as e:
-                    current_app.logger.error(f"Error while streaming: {e}")
-                    yield b""
+                    current_app.logger.error(f"Error in ffmpeg worker: {e}")
+                    buffer.put(None)
+                finally:
+                    if proc.poll() is None:
+                        proc.terminate()
+
+            worker = Thread(target=ffmpeg_worker)
+            worker.daemon = True
+            worker.start()
+
+            while True:
+                chunk = buffer.get()
+                if chunk is None:
+                    break
+                yield chunk
 
         return Response(stream_with_context(generate()), mimetype="audio/mpeg")
 
