@@ -12,16 +12,15 @@ document.addEventListener("DOMContentLoaded", function() {
     `;
     document.body.appendChild(musicPlayer);
 
-    const audioPlayer = document.createElement("audio");
-    audioPlayer.id = "audio-player";
-    document.body.appendChild(audioPlayer);
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let audioSource = null;
+    let isPlaying = false;
+    let isLoading = false;
+    let currentStreamUrl = null;
 
     const playBtn = musicPlayer.querySelector(".play-pause-btn");
     const albumArt = musicPlayer.querySelector(".music-art");
     const loadingSpinner = musicPlayer.querySelector(".loading-spinner");
-    let isDragging = false;
-    let offsetX, offsetY;
-    let isLoading = false;
 
     fetch("/music/list")
         .then(response => response.json())
@@ -48,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function loadTrack(playlist) {
         localStorage.setItem("lastSelectedPlaylist", JSON.stringify({ id: playlist.id }));
-        audioPlayer.src = `/music/play/${playlist.id}`;
+        currentStreamUrl = `/music/play/${playlist.id}`;
         loadingSpinner.style.display = "block";
         
         fetch(`/music/get_img/${playlist.id}`)
@@ -67,16 +66,30 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    playBtn.addEventListener("click", () => {
-        if (isLoading) return;
-        
-        if (audioPlayer.paused) {
+    async function playAudioStream() {
+        try {
             isLoading = true;
             playBtn.style.display = "none";
             loadingSpinner.style.display = "block";
             
-            audioPlayer.play()
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+            
+            if (audioSource) {
+                audioSource.stop();
+            }
+            
+            const audioElement = new Audio();
+            audioElement.crossOrigin = "anonymous";
+            audioElement.src = currentStreamUrl;
+            
+            audioSource = audioContext.createMediaElementSource(audioElement);
+            audioSource.connect(audioContext.destination);
+            
+            audioElement.play()
                 .then(() => {
+                    isPlaying = true;
                     playBtn.textContent = "❚❚";
                 })
                 .catch(err => {
@@ -88,11 +101,40 @@ document.addEventListener("DOMContentLoaded", function() {
                     loadingSpinner.style.display = "none";
                     isLoading = false;
                 });
+                
+            audioElement.addEventListener('ended', () => {
+                isPlaying = false;
+                playBtn.textContent = "▶";
+            });
+            
+        } catch (err) {
+            console.error("Error playing audio:", err);
+            playBtn.style.display = "block";
+            loadingSpinner.style.display = "none";
+            isLoading = false;
+        }
+    }
+
+    function stopAudio() {
+        if (audioSource) {
+            audioSource.disconnect();
+        }
+        isPlaying = false;
+        playBtn.textContent = "▶";
+    }
+
+    playBtn.addEventListener("click", () => {
+        if (isLoading) return;
+        
+        if (isPlaying) {
+            stopAudio();
         } else {
-            audioPlayer.pause();
-            playBtn.textContent = "▶";
+            playAudioStream();
         }
     });
+
+    let isDragging = false;
+    let offsetX, offsetY;
 
     musicPlayer.addEventListener("mousedown", (e) => {
         isDragging = true;
@@ -117,16 +159,5 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener("mouseup", () => {
         isDragging = false;
         musicPlayer.classList.remove("dragging");
-    });
-
-    audioPlayer.addEventListener("playing", () => {
-        playBtn.textContent = "❚❚";
-        playBtn.style.display = "block";
-        loadingSpinner.style.display = "none";
-        isLoading = false;
-    });
-
-    audioPlayer.addEventListener("ended", () => {
-        playBtn.textContent = "▶";
     });
 });
