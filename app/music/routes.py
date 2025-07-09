@@ -8,7 +8,7 @@ from collections import defaultdict
 import sys
 import os
 from threading import Thread
-from queue import Queue
+from queue import Queue, Empty
 
 mus_bp = Blueprint("music", __name__, url_prefix="/music")
 STREAM_LIST = {
@@ -64,8 +64,8 @@ def play_stream(stream_id):
 
     track_url = f"https://music.youtube.com/watch?v={STREAM_LIST.get(stream_id, [None])[0]}"
     cmd = [sys.executable, "-m", "yt_dlp",
-        "-g", "--no-playlist"
-    ]
+           "-g", "--no-playlist"
+          ]
 
     if os.path.exists(os.path.join(current_app.root_path, "cookies.txt")):
         cmd.append("--cookies")
@@ -75,45 +75,69 @@ def play_stream(stream_id):
 
     try:
         stream_url = subprocess.check_output(cmd).decode().strip()
+        current_app.logger.info(f"Stream URL obtained: {stream_url}")
 
         def generate():
-            buffer = Queue(maxsize=5)
-            
+            data_queue = Queue(maxsize=10)
+            stop_event = threading.Event()
+
             def ffmpeg_worker():
-                ffmpeg_cmd = [
-                    "ffmpeg",
-                    "-i", stream_url,
-                    "-f", "mp3",
-                    "-vn",
-                    "-loglevel", "quiet",
-                    "-"
-                ]
-                proc = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE)
                 try:
-                    while True:
+                    ffmpeg_cmd = [
+                        "ffmpeg",
+                        "-i", stream_url,
+                        "-f", "mp3",
+                        "-vn",
+                        "-loglevel", "quiet",
+                        "-"
+                    ]
+                    proc = subprocess.Popen(ffmpeg_cmd, 
+                                          stdout=subprocess.PIPE,
+                                          stderr=subprocess.PIPE,
+                                          bufsize=1024)
+
+                    while not stop_event.is_set():
                         chunk = proc.stdout.read(1024)
                         if not chunk:
-                            buffer.put(None)
+                            data_queue.put(None)
                             break
-                        buffer.put(chunk)
+                        data_queue.put(chunk)
+
                 except Exception as e:
-                    current_app.logger.error(f"Error in ffmpeg worker: {e}")
-                    buffer.put(None)
+                    current_app.logger.error(f"FFmpeg worker error: {e}")
+                    data_queue.put(None)
                 finally:
                     if proc.poll() is None:
                         proc.terminate()
+                        try:
+                            proc.wait(timeout=5)
+                        except subprocess.TimeoutExpired:
+                            proc.kill()
 
             worker = Thread(target=ffmpeg_worker)
             worker.daemon = True
             worker.start()
 
-            while True:
-                chunk = buffer.get()
-                if chunk is None:
-                    break
-                yield chunk
+            try:
+                while True:
+                    try:
+                        chunk = data_queue.get(timeout=30)
+                        if chunk is None:
+                            break
+                        yield chunk
+                    except Empty:
+                        current_app.logger.warning("Stream timeout, ending connection")
+                        break
+            finally:
+                stop_event.set()
+                worker.join(timeout=1)
 
-        return Response(stream_with_context(generate()), mimetype="audio/mpeg")
+        return Response(stream_with_context(generate()), 
+                       mimetype="audio/mpeg",
+                       headers={
+                           'Cache-Control': 'no-cache',
+                           'Connection': 'keep-alive'
+                       })
 
     except subprocess.CalledProcessError as e:
         current_app.logger.error(f"Failed to get stream URL: {e}")
