@@ -6,8 +6,6 @@ monkey.patch_all()
 
 from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response, current_app
 import subprocess
-from threading import Lock
-from collections import defaultdict
 import sys
 import os
 
@@ -23,9 +21,6 @@ STREAM_LIST = {
     "DarkAmbient": ["S_MOd40zlYU", "Dark Ambient Radio 🌃", "https://hc-cdn.hel1.your-objectstorage.com/s/v3/f5e1e8045b71469c2551b768b621d7283908edc5_image.png"],
     "Synthwave": ["4xDzrJKXOOY", "Synthwave Radio 🌌 ", "https://hc-cdn.hel1.your-objectstorage.com/s/v3/f3520bf7d57f1cebc53f5a024d7c8974f38adf2f_image.png"],
 }
-
-process_cache = defaultdict(dict)
-cache_lock = Lock()
 
 @mus_bp.route("/")
 def home():
