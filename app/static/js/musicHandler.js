@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     const dropdowns = document.querySelectorAll(".custom-dropdown");
-    const audioPlayer = document.getElementById("audio-player");
     const playBtn = document.getElementById("music-play");
     const albumArt = document.querySelector(".album-art");
     const trackNameElement = document.getElementById("music-track-name");
@@ -11,7 +10,11 @@ document.addEventListener("DOMContentLoaded", function() {
     loadingElement.style.display = "none";
     document.querySelector(".music-display").appendChild(loadingElement);
 
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let audioSource = null;
+    let isPlaying = false;
     let isLoading = false;
+    let currentStreamUrl = null;
 
     fetch("/music/list")
         .then(response => response.json())
@@ -64,10 +67,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     selectedOption.dataset.value = this.dataset.value;
                     dropdown.classList.remove("active");
                     trackNameElement.textContent = this.textContent;
+                    
+                    if (isPlaying) {
+                        stopAudio();
+                    }
+                    
+                    currentStreamUrl = `/music/play/${this.dataset.value}`;
                     loadAlbumArt(this.dataset.value);
-                    audioPlayer.src = `/music/play/${this.dataset.value}`;
-                    audioPlayer.pause();
-                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
                 });
             });
         });
@@ -79,8 +85,8 @@ document.addEventListener("DOMContentLoaded", function() {
             selectedOption.textContent = firstPlaylist.name;
             selectedOption.dataset.value = firstPlaylist.id;
             trackNameElement.textContent = firstPlaylist.name;
+            currentStreamUrl = `/music/play/${firstPlaylist.id}`;
             loadAlbumArt(firstPlaylist.id);
-            audioPlayer.src = `/music/play/${firstPlaylist.id}`;
         });
     }
 
@@ -100,17 +106,31 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    playBtn.addEventListener("click", () => {
-        if (isLoading) return;
-        
-        if (audioPlayer.paused) {
+    async function playAudioStream() {
+        try {
             isLoading = true;
-            loadingElement.style.display = "block";
             playBtn.disabled = true;
             playBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            loadingElement.style.display = "block";
             
-            audioPlayer.play()
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+            
+            if (audioSource) {
+                audioSource.disconnect();
+            }
+            
+            const audioElement = new Audio();
+            audioElement.crossOrigin = "anonymous";
+            audioElement.src = currentStreamUrl;
+            
+            audioSource = audioContext.createMediaElementSource(audioElement);
+            audioSource.connect(audioContext.destination);
+            
+            audioElement.play()
                 .then(() => {
+                    isPlaying = true;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 })
                 .catch(err => {
@@ -118,21 +138,41 @@ document.addEventListener("DOMContentLoaded", function() {
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
                 })
                 .finally(() => {
-                    loadingElement.style.display = "none";
                     playBtn.disabled = false;
+                    loadingElement.style.display = "none";
                     isLoading = false;
                 });
-        } else {
-            audioPlayer.pause();
+                
+            audioElement.addEventListener('ended', () => {
+                isPlaying = false;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            });
+            
+        } catch (err) {
+            console.error("Error playing audio:", err);
+            playBtn.disabled = false;
+            loadingElement.style.display = "none";
+            isLoading = false;
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
         }
-    });
+    }
 
-    audioPlayer.addEventListener("playing", () => {
-        loadingElement.style.display = "none";
-        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        playBtn.disabled = false;
-        isLoading = false;
+    function stopAudio() {
+        if (audioSource) {
+            audioSource.disconnect();
+        }
+        isPlaying = false;
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+
+    playBtn.addEventListener("click", () => {
+        if (isLoading) return;
+        
+        if (isPlaying) {
+            stopAudio();
+        } else {
+            playAudioStream();
+        }
     });
 
     document.addEventListener("click", function() {

@@ -6,7 +6,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-gunicorn -b ":$PORT" "app:create_app()" \
+gunicorn -w 12 -b ":$PORT" "app:create_app()" \
   --timeout 0 \
   --access-logfile - \
   --access-logformat '%(h)s - - %(t)s "%(r)s" %(s)s -' \

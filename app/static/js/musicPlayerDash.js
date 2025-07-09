@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let audioSource = null;
-    let audioBuffer = null;
     let isPlaying = false;
     let isLoading = false;
     let currentStreamUrl = null;
@@ -91,11 +90,11 @@ document.addEventListener("DOMContentLoaded", function() {
             audioElement.play()
                 .then(() => {
                     isPlaying = true;
-                    playBtn.textContent = "❚❚";
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 })
                 .catch(err => {
                     console.error("Playback failed:", err);
-                    playBtn.textContent = "▶";
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
                 })
                 .finally(() => {
                     playBtn.style.display = "block";
@@ -105,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 
             audioElement.addEventListener('ended', () => {
                 isPlaying = false;
-                playBtn.textContent = "▶";
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
             });
             
         } catch (err) {
@@ -121,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
             audioSource.disconnect();
         }
         isPlaying = false;
-        playBtn.textContent = "▶";
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
     }
 
     playBtn.addEventListener("click", () => {
