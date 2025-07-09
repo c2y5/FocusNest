@@ -1,8 +1,11 @@
 # app/music/routes.py
 # type: ignore
 
+import warnings
 from gevent import monkey
-monkey.patch_all(thread=False, subprocess=True)
+
+warnings.filterwarnings("ignore", category=monkey.MonkeyPatchWarning)
+monkey.patch_all()
 
 from flask import Blueprint, render_template, session, redirect, url_for, jsonify, stream_with_context, Response, current_app
 from gevent import subprocess
